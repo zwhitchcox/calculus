@@ -1,39 +1,54 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
 #include <math.h>
 
-#define MAX_STR 1024
+#define is_num(c) (int) c >= '0' && (int) c <= '9'
 
-int is_num(char c) {
-  return c >= '0' && c <= '9';
-}
-
-int parse_num(char *c) {
-  int result = 0;
+int parse_num(char *s, int *r) {
+  *r = 0;
+  char *c = s;
   while (is_num(*c)) {
-    result *= 10;
-    result += *c - '0';
+    *r *= 10;
+    *r += *c - '0';
     c++;
   }
-  return result;
+  return c - s; // return number of characters read
 }
 
-
-void itoa(int num, char *result) {
-  int idx = log(num)-1;
-  result[idx--] = '\0';
-  while (idx >= 0) {
-    result[idx] = (num % 10) + '0';
-    num /= 10;
-    idx--;
+void itoa(int x, char *r) {
+  int i = log10(x)+1;
+  r[i] = '\0';
+  while (i--) {
+    r[i] = (x % 10) + '0';
+    x /= 10;
   }
 }
 
-void solve(char *question, char *result) {
-  int cur = 0;
-  char *c = question;
-  int num = parse_num(question);
-  itoa(num, result);
+int solve(char *q, char *a) {
+  char *qp = q;
+  int r = 0;
+  int *cur;
+  int last_op = '+';
+
+  while (*qp) {
+    if (is_num(*qp)) {
+      qp += parse_num(qp, cur);
+      if (last_op == '+') {
+        r += *cur;
+        last_op == '\0';
+      } else {
+        printf("Illegal character: %c\n", *qp);
+        return 0;
+      }
+    } else if (*qp == ' ') {
+      qp++;
+    } else if (*qp == '+') {
+      last_op = *qp;
+      qp++;
+    } else {
+      printf("Illegal character: %c\n", *qp);
+      return 0;
+    }
+  }
+
+  itoa(r, a);
+  return 1;
 }
