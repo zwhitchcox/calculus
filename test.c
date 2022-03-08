@@ -5,7 +5,7 @@
 
 int main() {
   char result[MAX_RESULT];
-  if (solve("100 + 100 + 100", result)) {
+  if (solve("100 + 100 - 100", result)) {
     printf("result: %s\n", result);
   }
 }
