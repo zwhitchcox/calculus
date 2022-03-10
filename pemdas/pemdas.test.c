@@ -1,6 +1,6 @@
 #include "pemdas.h"
-#include "pemdas.print.h"
-#include "pemdas.eval.h"
+#include "print.h"
+#include "eval.h"
 
 #define MAX_STR 10000
 
@@ -19,5 +19,8 @@ int main() {
   pemdas_eval_s(chain);
   pemdas_sprint(src, chain);
   printf("%s\n", src);
+
+  // test 2
+  char src2[MAX_STR] = "1 / 2";
 }
 

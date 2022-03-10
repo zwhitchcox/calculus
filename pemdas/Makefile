@@ -7,7 +7,11 @@ debug:
 	$(CC) test.c -g -lm
 	gdb ./a.out
 
+.PHONY: clean
+clean:
+	rm -f *.test
+
 .PHONY: test
-%.test: $(OBJ)
-	$(CC) $(shell ls *.h | grep -v test) $(shell ls *.c | grep -v test) -o $@ $@.c
+%.test: clean
+	$(CC) $(shell ls *.h | grep -v test) $(shell ls *.c | grep -v test) -o $@ $@.c -lm
 	./$@

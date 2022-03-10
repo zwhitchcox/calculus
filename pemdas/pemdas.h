@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "frac.h"
+
 #ifndef __PEMDAS__
 #define __PEMDAS__
 
@@ -47,13 +49,8 @@ typedef struct PemdasFracToken {
   enum PemdasTokenType type;
   struct PemdasToken *prev;
   struct PemdasToken *next;
-  struct PemdasFrac *data;
+  struct Frac *data;
 } pemdas_frac_token_t;
-
-typedef struct PemdasFrac {
-  int numerator;
-  int denominator;
-} pemdas_frac_t;
 
 /* token - var */
 typedef struct PemdasVarToken {
@@ -71,6 +68,7 @@ typedef struct PemdasSubexprToken {
   struct PemdasToken *data;
 } pemdas_subexpr_token_t;
 
+struct PemdasToken *new_token();
 struct PemdasSubexprToken *new_subexpr_token();
 struct PemdasToken *parse(char *str);
 struct PemdasOpToken *parse_op(char *str, int *len);
