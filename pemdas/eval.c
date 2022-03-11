@@ -4,7 +4,7 @@
 #include "frac.h"
 
 
-int (*eval_fns[])(pemdas_token_t*) = {pemdas_eval_p, pemdas_eval_e, pemdas_eval_m, pemdas_eval_d, pemdas_eval_a, pemdas_eval_s};
+int (*eval_fns[])(pemdas_token_t*) = {pemdas_eval_p, pemdas_eval_e, pemdas_eval_d, pemdas_eval_m, pemdas_eval_a, pemdas_eval_s};
 int eval_fns_len = sizeof(eval_fns) / sizeof(eval_fns[0]);
 // evaluate a function, whichever one needs to be evaluated
 int pemdas_eval(struct PemdasToken *token) {
