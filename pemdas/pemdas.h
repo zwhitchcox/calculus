@@ -68,9 +68,13 @@ typedef struct PemdasSubexprToken {
   struct PemdasToken *data;
 } pemdas_subexpr_token_t;
 
-struct PemdasToken *new_token();
-struct PemdasSubexprToken *new_subexpr_token();
-struct PemdasToken *parse(char *str);
-struct PemdasOpToken *parse_op(char *str, int *len);
-struct PemdasIntToken *parse_int(char *str, int *len);
+struct PemdasToken *pemdas_new_token();
+struct PemdasOpToken *pemdas_new_op_token();
+struct PemdasIntToken *pemdas_new_int_token();
+struct PemdasSubexprToken *pemdas_new_subexpr_token();
+struct PemdasFracToken *new_frac_token(int num, int den);
+
+struct PemdasToken *pemdas_parse(char *str);
+struct PemdasOpToken *pemdas_parse_op(char *str, int *len);
+struct PemdasIntToken *pemdas_parse_int(char *str, int *len);
 #endif

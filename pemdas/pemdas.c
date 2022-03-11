@@ -1,18 +1,35 @@
-#include "pemdas.h"
-#include "frac.h"
-
 #include <ctype.h>
 #include <stdio.h>
 
-struct PemdasToken *new_token() {
+#include "pemdas.h"
+#include "frac.h"
+
+struct PemdasToken *pemdas_new_token() {
   return malloc(sizeof(struct PemdasToken));
 }
 
-struct PemdasSubexprToken *new_subexpr_token() {
-  return malloc(sizeof(struct PemdasSubexprToken));
+struct PemdasFracToken *pemdas_new_frac_token(int num, int den) {
+  struct PemdasFracToken *token = (struct PemdasFracToken *)pemdas_new_token();
+  token->type = PEMDAS_FRAC;
+  token->data = frac_new(num, den);
+  return token;
 }
 
-struct PemdasIntToken *parse_int(char *str, int *len) {
+struct PemdasOpToken *pemdas_new_op_token(enum PemdasOp op) {
+  struct PemdasOpToken *token = (struct PemdasOpToken *)pemdas_new_token();
+  token->type = PEMDAS_OP;
+  token->data = op;
+  return token;
+}
+
+struct PemdasSubexprToken *pemdas_new_subexpr_token() {
+  struct PemdasSubexprToken *token = (struct PemdasSubexprToken *)pemdas_new_token();
+  token->type = PEMDAS_SUBEXPR;
+  // TODO
+  return token;
+}
+
+struct PemdasIntToken *pemdas_parse_int(char *str, int *len) {
   if (!isdigit(*str)) {
     return NULL;
   }
@@ -25,41 +42,36 @@ struct PemdasIntToken *parse_int(char *str, int *len) {
     (*len)++;
   }
 
-  struct PemdasIntToken *token = (struct PemdasIntToken *)new_token();
+  struct PemdasIntToken *token = (struct PemdasIntToken *)pemdas_new_token();
   token->data = num;
   token->type = PEMDAS_INT;
   return token;
 }
 
-#define NEW_TOKEN_OP(token_type)               \
-  token = (struct PemdasOpToken *)new_token(); \
-  token->type = PEMDAS_OP;                     \
-  token->data = token_type;                    \
-  return token;
-struct PemdasOpToken *parse_op(char *str, int *len) {
+struct PemdasOpToken *pemdas_parse_op(char *str, int *len) {
   struct PemdasOpToken *token;
   switch (*str) {
     case '+':
       *len = 1;
-      NEW_TOKEN_OP(PEMDAS_ADD);
+      return pemdas_new_op_token(PEMDAS_ADD);
     case '-':
       *len = 1;
-      NEW_TOKEN_OP(PEMDAS_SUB);
+      return pemdas_new_op_token(PEMDAS_SUB);
     case '/':
       *len = 1;
-      NEW_TOKEN_OP(PEMDAS_DIV);
+      return pemdas_new_op_token(PEMDAS_DIV);
     case '*':
       *len = 1;
-      NEW_TOKEN_OP(PEMDAS_MUL);
+      return pemdas_new_op_token(PEMDAS_MUL);
   }
   return NULL;
 }
 
 // https://craftinginterpreters.com/scanning.html
-struct PemdasToken *parse(char *str) {
+struct PemdasToken *pemdas_parse(char *str) {
   char *strp = str;
   int parsed = 0;
-  struct PemdasToken *cur = new_token();
+  struct PemdasToken *cur = pemdas_new_token();
   struct PemdasToken *dummy = cur;
   cur->type = PEMDAS_DUMMY;
   cur->next = NULL;
@@ -70,8 +82,8 @@ struct PemdasToken *parse(char *str) {
     while (isblank(*strp)) {
       strp++;
     }
-    if (!((cur->next = (pemdas_token_t *)parse_int(strp, &len)) ||
-          (cur->next = (pemdas_token_t *)parse_op(strp, &len)))) {
+    if (!((cur->next = (pemdas_token_t *)pemdas_parse_int(strp, &len)) ||
+          (cur->next = (pemdas_token_t *)pemdas_parse_op(strp, &len)))) {
       fprintf(stderr, "unexpected token at %s", strp);
       return 0;
     }

@@ -75,14 +75,14 @@ void frac_sub(struct Frac *x, struct Frac *y) {
   free(y);
 }
 
-struct Frac *frac_mul(struct Frac *x, struct Frac *y) {
+void frac_mul(struct Frac *x, struct Frac *y) {
   x->num *= y->num;
   x->den *= y->den;
   frac_reduce(x);
   free(y);
 }
 
-struct Frac *frac_div(struct Frac *x, struct Frac *y) {
+void frac_div(struct Frac *x, struct Frac *y) {
   x->num *= y->den;
   x->den *= y->num;
   frac_reduce(x);

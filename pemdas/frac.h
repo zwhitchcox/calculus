@@ -13,4 +13,7 @@ void frac_denominate(struct Frac *frac, int den);
 void frac_reduce(struct Frac *frac);
 void frac_print(struct Frac *frac);
 void frac_add(struct Frac *x, struct Frac *y);
+void frac_div(struct Frac *x, struct Frac *y);
+void frac_sub(struct Frac *x, struct Frac *y);
+void frac_mul(struct Frac *x, struct Frac *y);
 #endif

@@ -47,6 +47,17 @@ int pemdas_sprint_int(char *str, struct PemdasIntToken *int_token) {
   return sprintf(str, "%d", int_token->data);
 }
 
+int pemdas_sprint_num(char *str, struct PemdasToken *num_token) {
+  if (num_token->type == PEMDAS_FRAC) {
+    return pemdas_sprint_frac(str, (void *) num_token);
+  } else if (num_token->type == PEMDAS_INT) {
+    return pemdas_sprint_int(str, (void *) num_token);
+  } else {
+    fprintf(stderr, "not number\n");
+    return 0;
+  }
+}
+
 int pemdas_sprint_var(char *str, struct PemdasVarToken *var_token) {
   return sprintf(str, " %s ", var_token->data);
 }
@@ -66,6 +77,9 @@ int pemdas_sprint(char *str, struct PemdasToken *token) {
         break;
       case PEMDAS_VAR:
         str += pemdas_sprint_var(str, (struct PemdasVarToken *) token);
+        break;
+      case PEMDAS_FRAC:
+        str += pemdas_sprint_frac(str, (struct PemdasFracToken *) token);
         break;
       default:
         fprintf(stderr, "Invalid token\n");
