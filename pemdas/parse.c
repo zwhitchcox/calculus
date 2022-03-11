@@ -1,7 +1,7 @@
 #include <ctype.h>
 #include <stdio.h>
 
-#include "pemdas.h"
+#include "parse.h"
 #include "frac.h"
 
 struct PemdasToken *pemdas_new_token() {

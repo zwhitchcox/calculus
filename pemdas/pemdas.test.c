@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "pemdas.h"
+#include "parse.h"
 #include "print.h"
 #include "eval.h"
 
@@ -27,4 +27,5 @@ void eval_and_print(char *src) {
 int main() {
   eval_and_print("1 + 1 + 2 - 3 * 4");
   eval_and_print("1 / 2 * 3");
+  eval_and_print("x = 100 * 3 / 4");
 }
