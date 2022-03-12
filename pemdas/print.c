@@ -7,13 +7,13 @@
 int pemdas_sprint_op(char *str, struct PemdasOpToken *op_token) {
   switch (op_token->data) {
     case PEMDAS_ADD:
-      return sprintf(str, " + ");
+      return sprintf(str, "+");
     case PEMDAS_SUB:
-      return sprintf(str, " - ");
+      return sprintf(str, "-");
     case PEMDAS_MUL:
-      return sprintf(str, " * ");
+      return sprintf(str, "*");
     case PEMDAS_DIV:
-      return sprintf(str, " / ");
+      return sprintf(str, "/");
     default:
       fprintf(stderr, "unrecognized token %s", str);
       return 0;
@@ -59,7 +59,25 @@ int pemdas_sprint_num(char *str, struct PemdasToken *num_token) {
 }
 
 int pemdas_sprint_var(char *str, struct PemdasVarToken *var_token) {
-  return sprintf(str, " %s ", var_token->data);
+  return sprintf(str, "%s", var_token->data);
+}
+
+int pemdas_sprint_ineq(char *str, struct PemdasIneqToken *ineq_token) {
+  switch (ineq_token->data) {
+    case PEMDAS_EQ:
+      return sprintf(str, "=");
+    case PEMDAS_GT:
+      return sprintf(str, ">");
+    case PEMDAS_GTE:
+      return sprintf(str, ">=");
+    case PEMDAS_LT:
+      return sprintf(str, "<");
+    case PEMDAS_LTE:
+      return sprintf(str, "<=");
+    default:
+      fprintf(stderr, "unrecognized token %s", str);
+      return 0;
+  }
 }
 
 int pemdas_sprint(char *str, struct PemdasToken *token) {
@@ -81,10 +99,15 @@ int pemdas_sprint(char *str, struct PemdasToken *token) {
       case PEMDAS_FRAC:
         str += pemdas_sprint_frac(str, (struct PemdasFracToken *) token);
         break;
+      case PEMDAS_INEQ:
+        str += pemdas_sprint_ineq(str, (struct PemdasIneqToken *) token);
+        break;
       default:
-        fprintf(stderr, "Invalid token\n");
+        fprintf(stderr, "pemdas_sprint: Invalid token\n");
     }
     token = token->next;
+    *str++ = ' ';
   }
+  *str = '\0';
   return str - start;
 }
