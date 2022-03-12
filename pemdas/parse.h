@@ -74,8 +74,13 @@ typedef struct PemdasVarToken {
   enum PemdasTokenType type;
   struct PemdasToken *prev;
   struct PemdasToken *next;
-  char *data;
+  struct PemdasVar *data;
 } pemdas_var_token_t;
+
+typedef struct PemdasVar {
+  char *name;
+  struct PemdasToken *coefficient;
+} pemdas_var_t;
 
 /* token - subexpr */
 typedef struct PemdasSubexprToken {
@@ -90,7 +95,7 @@ struct PemdasOpToken *pemdas_new_op_token();
 struct PemdasIntToken *pemdas_new_int_token();
 struct PemdasSubexprToken *pemdas_new_subexpr_token();
 struct PemdasFracToken *pemdas_new_frac_token(int num, int den);
-struct PemdasVarToken *pemdas_new_var_token(char *str);
+struct PemdasVarToken *pemdas_new_var_token(char *name, struct PemdasToken *coef);
 struct PemdasIneqToken *pemdas_new_ineq_token(enum PemdasIneq);
 
 struct PemdasToken *pemdas_parse(char *str);

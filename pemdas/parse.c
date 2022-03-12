@@ -16,10 +16,13 @@ struct PemdasFracToken *pemdas_new_frac_token(int num, int den) {
   return token;
 }
 
-struct PemdasVarToken *pemdas_new_var_token(char *str) {
+struct PemdasVarToken *pemdas_new_var_token(char *name, struct PemdasToken *coef) {
   struct PemdasVarToken *token = (struct PemdasVarToken *)pemdas_new_token();
+  struct PemdasVar *var = malloc(sizeof(struct PemdasVar));
+  var->name = name;
+  var->coefficient = coef;
   token->type = PEMDAS_VAR;
-  token->data = str;
+  token->data = var;
   return token;
 }
 
@@ -113,7 +116,7 @@ struct PemdasVarToken *pemdas_parse_var(char *str, int *len) {
     while (isalnum(*str) || isdigit(*str))
       str++;
     *len = str - start;
-    return pemdas_new_var_token(strndup(start, *len));
+    return pemdas_new_var_token(strndup(start, *len), (pemdas_token_t *) pemdas_new_frac_token(1, 1));
   }
   return NULL;
 }

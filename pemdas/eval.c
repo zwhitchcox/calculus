@@ -47,7 +47,7 @@ int is_num(struct PemdasToken *token) {
 
 void simplify_frac(struct PemdasToken *token) {
   if (token->type != PEMDAS_FRAC) {
-    printf("not frac\n");
+    fprintf(stderr, "simplify: not frac\n");
     return;
   }
   if (((struct PemdasFracToken *) token)->data->den == 1) {

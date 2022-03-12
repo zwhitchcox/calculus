@@ -24,7 +24,7 @@ int pemdas_sprint_frac(char *str, struct PemdasFracToken *frac_token) {
   struct Frac *frac = (struct Frac *) frac_token->data;
   int num = frac->num;
   int den = frac->den;
-  if (num > den) {
+  if (num >= den) {
     int remainder = num % den;
     int quotient = num / den;
     if (remainder) {
@@ -59,7 +59,13 @@ int pemdas_sprint_num(char *str, struct PemdasToken *num_token) {
 }
 
 int pemdas_sprint_var(char *str, struct PemdasVarToken *var_token) {
-  return sprintf(str, "%s", var_token->data);
+  char *start = str;
+  struct Frac *coef = var_token->data->coefficient->data;
+  if (!(coef->num == 1 && coef->den == 1)) {
+    str += pemdas_sprint_num(str, coef);
+  }
+  str += sprintf(str, "%s", var_token->data->name);
+  return str - start;
 }
 
 int pemdas_sprint_ineq(char *str, struct PemdasIneqToken *ineq_token) {
