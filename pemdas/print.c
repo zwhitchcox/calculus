@@ -106,8 +106,10 @@ int pemdas_sprint(char *str, struct PemdasToken *token) {
       default:
         fprintf(stderr, "pemdas_sprint: Invalid token\n");
     }
+    if (token->type != PEMDAS_EXPR) {
+      *str++ = ' ';
+    }
     token = token->next;
-    *str++ = ' ';
   }
   *str = '\0';
   return str - start;

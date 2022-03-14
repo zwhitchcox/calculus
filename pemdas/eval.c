@@ -8,9 +8,21 @@ int (*eval_fns[])(pemdas_token_t*) = {pemdas_eval_p, pemdas_eval_e, pemdas_eval_
 int eval_fns_len = sizeof(eval_fns) / sizeof(eval_fns[0]);
 
 int pemdas_eval(struct PemdasToken *token) {
-  if (token->type == PEMDAS_EXPR) {
-    return pemdas_eval_expr(token->data);
+  int ops_performed = 0;
+  while (token) {
+    switch (token->type) {
+      case PEMDAS_EXPR:
+        ops_performed += pemdas_eval_expr(token->data);
+        break;
+      case PEMDAS_INEQ:
+        // TODO
+        break;
+      default:
+        break;
+    }
+    token = token->next;
   }
+  return ops_performed;
 }
 // evaluate a function, whichever one needs to be evaluated
 int pemdas_eval_expr(struct PemdasToken *token) {

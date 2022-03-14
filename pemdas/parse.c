@@ -153,10 +153,10 @@ struct PemdasExprToken *pemdas_parse_paren(char *str, int *len) {
   char *strp = str;
   struct PemdasExprToken *token;
   if (*strp == '(') {
-    token = pemdas_new_expr_token((pemdas_token_t *) pemdas_parse_expr(++strp, len));
+    token = pemdas_parse_expr(++strp, len);
     strp+= *len;
     if (*strp != ')') {
-      fprintf(stderr, "unexpected token\n");
+      fprintf(stderr, "unexpected token at %s\n", str);
       return NULL;
     }
     strp++;
@@ -165,18 +165,19 @@ struct PemdasExprToken *pemdas_parse_paren(char *str, int *len) {
   }
   return NULL;
 }
-#define skip_blank(var) while (isblank(*var)) var++;
+#define skip_blank(var)
 struct PemdasExprToken *pemdas_parse_expr(char *str, int *len) {
   char *strp = str;
   struct PemdasToken *cur = pemdas_new_token();
   struct PemdasToken *dummy = cur;
   cur->type = PEMDAS_DUMMY;
   cur->next = NULL;
-  *len = 0;
   int _len;
   while (*strp) {
-    skip_blank(strp)
     _len = 0;
+    while (isblank(*strp)) {
+      strp++;
+    }
     if (!((cur->next = (pemdas_token_t *)pemdas_parse_paren(strp, &_len)) ||
           (cur->next = (pemdas_token_t *)pemdas_parse_int(strp, &_len)) ||
           (cur->next = (pemdas_token_t *)pemdas_parse_op(strp, &_len)) ||
@@ -186,10 +187,8 @@ struct PemdasExprToken *pemdas_parse_expr(char *str, int *len) {
     cur->next->prev = cur;
     cur = cur->next;
     strp += _len;
-    *len += _len;
-    // char s[1000];
-    // print_chain(s, dummy->next);
   }
+  *len = strp - str;
 
   cur->next = NULL;
   if (dummy->next) {
