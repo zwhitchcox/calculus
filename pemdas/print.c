@@ -4,7 +4,9 @@
 #include "frac.h"
 #include "math.h"
 
+
 int pemdas_sprint_op(char *str, struct PemdasOpToken *op_token) {
+  printf("op: %d\n", op_token->data);
   switch (op_token->data) {
     case PEMDAS_ADD:
       return sprintf(str, "+");
@@ -35,13 +37,7 @@ int pemdas_sprint_frac(char *str, struct PemdasFracToken *frac_token) {
   } else {
     return sprintf(str, "%d/%d", num, den);
   }
-
-//   return sprintf("%d/%d", frac->num, frac->den);
 }
-
-
-// int pemdas_sprint_op(char *str, struct PemdasFracToken *frac_token) {
-// }
 
 int pemdas_sprint_int(char *str, struct PemdasIntToken *int_token) {
   return sprintf(str, "%d", int_token->data);
@@ -60,9 +56,9 @@ int pemdas_sprint_num(char *str, struct PemdasToken *num_token) {
 
 int pemdas_sprint_var(char *str, struct PemdasVarToken *var_token) {
   char *start = str;
-  struct Frac *coef = var_token->data->coefficient->data;
-  if (!(coef->num == 1 && coef->den == 1)) {
-    str += pemdas_sprint_num(str, coef);
+  struct PemdasFracToken *coef = (pemdas_frac_token_t *) var_token->data->coefficient;
+  if (!(coef->data->num == 1 && coef->data->den == 1)) {
+    str += pemdas_sprint_num(str, (pemdas_token_t *) coef);
   }
   str += sprintf(str, "%s", var_token->data->name);
   return str - start;
@@ -90,13 +86,15 @@ int pemdas_sprint(char *str, struct PemdasToken *token) {
   char *start = str;
   while (token) {
     switch (token->type) {
-      case PEMDAS_SUBEXPR:
+      case PEMDAS_EXPR:
         str += pemdas_sprint(str, token->data);
         break;
       case PEMDAS_OP:
+      printf("printing op\n");
         str += pemdas_sprint_op(str, (struct PemdasOpToken *) token);
         break;
       case PEMDAS_INT:
+        printf("printing integer\n");
         str += pemdas_sprint_int(str, (struct PemdasIntToken *) token);
         break;
       case PEMDAS_VAR:

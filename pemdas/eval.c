@@ -24,7 +24,8 @@ int pemdas_eval(struct PemdasToken *token) {
 }
 
 int pemdas_eval_p(struct PemdasToken *token) {
-  return 0;
+  int ops_performed = 0;
+  return ops_performed;
 }
 
 int pemdas_eval_e(struct PemdasToken *token) {
@@ -62,6 +63,7 @@ void simplify_frac(struct PemdasToken *token) {
 int pemdas_eval_frac_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(struct Frac *o1, struct Frac *o2)) {
   int ops_performed = 0;
   while (token && token->next) {
+    // printf("token type: %s\n", get_pemdas_token_type_str(token->type));
     if (!(token->type == PEMDAS_OP && (enum PemdasOp) token->data == op)) {
       token = token->next;
       continue;
@@ -69,6 +71,7 @@ int pemdas_eval_frac_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(
     struct PemdasToken *next = token->next;
     struct PemdasToken *prev = token->prev;
     struct PemdasToken *after = next->next;
+
     char str[10000];
     if (is_num(prev) && is_num(next)) {
       ensure_frac(prev);
@@ -82,6 +85,8 @@ int pemdas_eval_frac_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(
       simplify_frac(prev);
       ops_performed++;
       token = prev;
+    } else {
+      token = token->next;
     }
   }
   return ops_performed;
