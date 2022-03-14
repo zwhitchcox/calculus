@@ -3,6 +3,7 @@
 #ifndef __PEMDAS_EVAL__
 #define __PEMDAS_EVAL__
 int pemdas_eval(struct PemdasToken *token);
+int pemdas_eval_expr(struct PemdasToken *token);
 int pemdas_eval_p(struct PemdasToken *token);
 int pemdas_eval_e(struct PemdasToken *token);
 int pemdas_eval_m(struct PemdasToken *token);

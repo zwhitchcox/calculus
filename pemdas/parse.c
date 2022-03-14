@@ -93,7 +93,6 @@ struct PemdasIntToken *pemdas_parse_int(char *str, int *len) {
     str++;
     (*len)++;
   }
-  printf("parsed int: %d\n", num);
   return pemdas_new_int_token(num);
 }
 
@@ -101,19 +100,15 @@ struct PemdasOpToken *pemdas_parse_op(char *str, int *len) {
   switch (*str) {
     case '+':
       *len = 1;
-      printf("parsed op: %c\n", *str);
       return pemdas_new_op_token(PEMDAS_ADD);
     case '-':
       *len = 1;
-      printf("parsed op: %c\n", *str);
       return pemdas_new_op_token(PEMDAS_SUB);
     case '/':
       *len = 1;
-      printf("parsed op: %c\n", *str);
       return pemdas_new_op_token(PEMDAS_DIV);
     case '*':
       *len = 1;
-      printf("parsed op: %c\n", *str);
       return pemdas_new_op_token(PEMDAS_MUL);
   }
   return NULL;
@@ -172,7 +167,6 @@ struct PemdasExprToken *pemdas_parse_paren(char *str, int *len) {
 }
 #define skip_blank(var) while (isblank(*var)) var++;
 struct PemdasExprToken *pemdas_parse_expr(char *str, int *len) {
-  printf("parsing expression: %s\n", str);
   char *strp = str;
   struct PemdasToken *cur = pemdas_new_token();
   struct PemdasToken *dummy = cur;
@@ -201,7 +195,7 @@ struct PemdasExprToken *pemdas_parse_expr(char *str, int *len) {
   if (dummy->next) {
     dummy->next->prev = NULL;
   }
-  return (struct PemdasExprToken *)dummy->next;
+  return pemdas_new_expr_token(dummy->next);
 }
 
 

@@ -6,7 +6,6 @@
 
 
 int pemdas_sprint_op(char *str, struct PemdasOpToken *op_token) {
-  printf("op: %d\n", op_token->data);
   switch (op_token->data) {
     case PEMDAS_ADD:
       return sprintf(str, "+");
@@ -90,11 +89,9 @@ int pemdas_sprint(char *str, struct PemdasToken *token) {
         str += pemdas_sprint(str, token->data);
         break;
       case PEMDAS_OP:
-      printf("printing op\n");
         str += pemdas_sprint_op(str, (struct PemdasOpToken *) token);
         break;
       case PEMDAS_INT:
-        printf("printing integer\n");
         str += pemdas_sprint_int(str, (struct PemdasIntToken *) token);
         break;
       case PEMDAS_VAR:

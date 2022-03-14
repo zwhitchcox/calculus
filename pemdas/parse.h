@@ -36,17 +36,6 @@ printable_enum(PemdasTokenType, pemdas_token_type,
   PEMDAS_EXPR,
   PEMDAS_INEQ,
 )
-// long enum_nums[] = {PEMDAS_DUMMY, PEMDAS_OP};
-
-// enum PemdasTokenType {
-//   PEMDAS_DUMMY, // used internally
-//   PEMDAS_OP,
-//   PEMDAS_INT,
-//   PEMDAS_FRAC,
-//   PEMDAS_VAR,
-//   PEMDAS_EXPR,
-//   PEMDAS_INEQ,
-// };
 
 typedef struct PemdasToken {
   enum PemdasTokenType type;
@@ -56,12 +45,12 @@ typedef struct PemdasToken {
 } pemdas_token_t;
 
 /* token - operations */
-enum PemdasOp {
+printable_enum(PemdasOp, pemdas_op,
   PEMDAS_ADD,
   PEMDAS_SUB,
   PEMDAS_MUL,
   PEMDAS_DIV,
-};
+)
 typedef struct PemdasOpToken {
   enum PemdasTokenType type;
   struct PemdasToken *prev;
