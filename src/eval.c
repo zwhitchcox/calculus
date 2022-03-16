@@ -73,26 +73,44 @@ void ensure_frac(struct PemdasToken *token) {
   } else if (token->type == PEMDAS_INT) {
     token->type = PEMDAS_FRAC;
     token->data = frac_new((size_t) token->data, 1);
+  } else if (token->type == PEMDAS_VAR) {
+    ensure_frac(((pemdas_var_token_t *)token)->data->coefficient);
   } else {
     fprintf(stderr, "can only convert int and frac types to frac\n");
   }
 }
 
 int is_num(struct PemdasToken *token) {
-  return token->type == PEMDAS_INT || token->type == PEMDAS_FRAC;
+  return token->type == PEMDAS_INT || token->type == PEMDAS_FRAC || token->type == PEMDAS_VAR;
 }
 
 void simplify_frac(struct PemdasToken *token) {
+  if (token->type == PEMDAS_VAR) {
+    token = ((pemdas_var_token_t *) token)->data->coefficient;
+  }
   if (token->type != PEMDAS_FRAC) {
     fprintf(stderr, "simplify: not frac\n");
-    return;
+    exit(1);
   }
-  if (((struct PemdasFracToken *) token)->data->den == 1) {
-    token->type = PEMDAS_INT;
-    token->data = (void *) (size_t) ((struct PemdasFracToken *) token)->data->num;
-    return;
-  }
+  // if (((struct PemdasFracToken *) token)->data->den == 1) {
+  //   token->type = PEMDAS_INT;
+  //   token->data = (void *) (size_t) ((struct PemdasFracToken *) token)->data->num;
+  //   return;
+  // }
   frac_reduce(token->data);
+}
+
+struct PemdasToken *get_num_token(struct PemdasToken *token) {
+  if (token->type == PEMDAS_VAR) {
+    return ((pemdas_var_token_t *) token)->data->coefficient;
+  } else if (token->type == PEMDAS_INT) {
+    return token;
+  } else if (token->type == PEMDAS_FRAC) {
+    return token;
+  } else {
+    fprintf(stderr, "token not allowed: %s\n", get_pemdas_token_type_str(token->type));
+    exit(1);
+  }
 }
 
 
@@ -113,7 +131,7 @@ int pemdas_eval_frac_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(
     if (is_num(prev) && is_num(next)) {
       ensure_frac(prev);
       ensure_frac(next);
-      fn(prev->data, next->data);
+      fn(get_num_token(prev)->data, get_num_token(next)->data);
       free(next);
       prev->next = after;
       if (after) {

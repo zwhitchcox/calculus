@@ -6,6 +6,7 @@
 #include "frac.h"
 #include "math.h"
 #include "token.h"
+#include "debug.h"
 
 int pemdas_sprint_op(char *str, struct PemdasOpToken *op_token) {
   switch (op_token->data) {
