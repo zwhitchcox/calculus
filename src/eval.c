@@ -26,6 +26,7 @@ int pemdas_eval(struct PemdasToken *token) {
   }
   return ops_performed;
 }
+
 // evaluate a function, whichever one needs to be evaluated
 int pemdas_eval_expr(struct PemdasToken *token) {
   int ops_performed = 0;

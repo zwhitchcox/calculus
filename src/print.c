@@ -80,19 +80,22 @@ int pemdas_sprint_ineq(char *str, struct PemdasIneqToken *ineq_token) {
       return 0;
   }
 }
-
-int pemdas_sprint(char *str, struct PemdasToken *token) {
+int pemdas_sprint_expr(char *str, struct PemdasToken *token, int parens) {
   char *start = str;
   while (token) {
     switch (token->type) {
       case PEMDAS_EXPR:
-        *str++ = '(';
-        str += pemdas_sprint(str, token->data);
-        if (*(str-1) == ' ') {
-          *(str-1) = ')';
-          *str++ = ' ';
-        } else {
-          *str++ = ')';
+        if (parens) {
+          *str++ = '(';
+        }
+        str += pemdas_sprint_expr(str, token->data, 1);
+        if (parens) {
+          if (*(str-1) == ' ') {
+            *(str-1) = ')';
+            *str++ = ' ';
+          } else {
+            *str++ = ')';
+          }
         }
         break;
       case PEMDAS_OP:
@@ -107,11 +110,34 @@ int pemdas_sprint(char *str, struct PemdasToken *token) {
       case PEMDAS_FRAC:
         str += pemdas_sprint_frac(str, (struct PemdasFracToken *) token);
         break;
+      default:
+        fprintf(stderr, "pemdas_sprint: Invalid token: %s\n", get_pemdas_token_type_str(token->type));
+
+        exit(1);
+    }
+    if (token->type != PEMDAS_EXPR) {
+      *str++ = ' ';
+    }
+    token = token->next;
+  }
+  *str = '\0';
+  return str - start;
+}
+
+int pemdas_sprint(char *str, struct PemdasToken *token) {
+  char *start = str;
+  while (token) {
+    switch (token->type) {
+      case PEMDAS_EXPR:
+        str += pemdas_sprint_expr(str, token->data, 0);
+        break;
       case PEMDAS_INEQ:
         str += pemdas_sprint_ineq(str, (struct PemdasIneqToken *) token);
         break;
       default:
         fprintf(stderr, "pemdas_sprint: Invalid token\n");
+        exit(1);
+        break;
     }
     if (token->type != PEMDAS_EXPR) {
       *str++ = ' ';
