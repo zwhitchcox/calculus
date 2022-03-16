@@ -1,6 +1,6 @@
 #include "eval.h"
 #include "print.h"
-#include "parse.h"
+#include "token.h"
 #include "frac.h"
 #include "debug.h"
 
@@ -48,6 +48,15 @@ int pemdas_eval_expr(struct PemdasToken *token) {
 
 int pemdas_eval_p(struct PemdasToken *token) {
   int ops_performed = 0;
+  while (token) {
+    if (token->type == PEMDAS_EXPR) {
+      ops_performed += pemdas_eval_expr(token->data);
+    }
+    if (!((pemdas_expr_token_t *) token)->data->next) {
+
+    }
+    token = token->next;
+  }
   return ops_performed;
 }
 
@@ -96,7 +105,10 @@ int pemdas_eval_frac_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(
     struct PemdasToken *after = next->next;
 
     char str[10000];
+
+    debug_token("op", token);
     if (is_num(prev) && is_num(next)) {
+      debug_token("frac_op", token);
       ensure_frac(prev);
       ensure_frac(next);
       fn(prev->data, next->data);

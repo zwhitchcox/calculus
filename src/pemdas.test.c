@@ -14,11 +14,10 @@ void print_chain(char *src, struct PemdasToken *chain) {
 void eval_and_print(char *src) {
   char *longer_src = malloc(MAX_STR);
   strcpy(longer_src, src);
-  // printf("%s\n", longer_src);
+  printf("%s\n", longer_src);
   struct PemdasToken *chain = pemdas_parse(longer_src);
   print_chain(longer_src, chain);
   while (pemdas_eval(chain)) {
-    printf("printing: ");
     print_chain(longer_src, chain);
   }
   printf("\n");

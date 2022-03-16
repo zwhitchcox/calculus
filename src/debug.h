@@ -4,7 +4,7 @@
 #define __PEMDAS_DEBUG__
 #define debug printf
 void debug_token_o(struct PemdasToken *token, char *str, int nl);
-void debug_token(struct PemdasToken *token, char *str);
+void debug_token(char *str, struct PemdasToken *token);
 #endif /* __PEMDAS_DEBUG__ */
 
 // #include <string.h>
