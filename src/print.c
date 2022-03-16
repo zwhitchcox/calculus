@@ -86,7 +86,14 @@ int pemdas_sprint(char *str, struct PemdasToken *token) {
   while (token) {
     switch (token->type) {
       case PEMDAS_EXPR:
+        *str++ = '(';
         str += pemdas_sprint(str, token->data);
+        if (*(str-1) == ' ') {
+          *(str-1) = ')';
+          *str++ = ' ';
+        } else {
+          *str++ = ')';
+        }
         break;
       case PEMDAS_OP:
         str += pemdas_sprint_op(str, (struct PemdasOpToken *) token);

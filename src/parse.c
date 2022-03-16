@@ -5,6 +5,7 @@
 #include "frac.h"
 #include "string.h"
 #include "print.h"
+#include "debug.h"
 
 
 /* debugging */
@@ -113,8 +114,6 @@ struct PemdasOpToken *pemdas_parse_op(char *str, int *len) {
   }
   return NULL;
 }
-
-struct PemdasSubToken *pemdas_parse_sub(char *str, int *len) {}
 
 struct PemdasIneqToken *pemdas_parse_ineq(char *str, int *len) {
   switch (*str) {

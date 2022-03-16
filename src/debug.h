@@ -2,8 +2,9 @@
 
 #ifndef __PEMDAS_DEBUG__
 #define __PEMDAS_DEBUG__
-void debug_token_s(struct PemdasToken *token, char *str);
-void debug_token(struct PemdasToken *token);
+#define debug printf
+void debug_token_o(struct PemdasToken *token, char *str, int nl);
+void debug_token(struct PemdasToken *token, char *str);
 #endif /* __PEMDAS_DEBUG__ */
 
 // #include <string.h>

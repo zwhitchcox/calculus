@@ -1,7 +1,7 @@
 #include "parse.h"
+#include "debug.h"
 
-void debug_token_s(struct PemdasToken *token, char *str) {
-  int printnl = 1;
+void debug_token_o(struct PemdasToken *token, char *str, int nl) {
   printf("%s:%s", str, get_pemdas_token_type_str(token->type));
   switch (token->type) {
     case PEMDAS_OP:
@@ -17,26 +17,32 @@ void debug_token_s(struct PemdasToken *token, char *str) {
       struct PemdasVarToken *var_token = (struct PemdasVarToken *) token;
       struct PemdasToken *co_token = var_token->data->coefficient;
       printf(":%s:val", var_token->data->name);
-      printnl = 0;
-      debug_token_s(co_token, "");
+      debug_token_o(co_token, "", 0);
       break;
     case PEMDAS_INEQ:
       printf(":%s", get_pemdas_ineq_str(((pemdas_ineq_token_t *) token)->data));
       break;
-    case PEMDAS_EXPR:
+    case PEMDAS_EXPR:;
       printf(":expression");
+      pemdas_token_t *cur_token = token->data;
+      while (cur_token) {
+        debug_token_o(cur_token, "", 0);
+        cur_token = cur_token->next;
+      }
       break;
     default:
       printf("unrecognized type\n");
   }
-  if (printnl) {
+  if (nl) {
     printf("\n");
   }
+
 }
 
-void debug_token(struct PemdasToken *token) {
-  debug_token_s(token, "debug:");
+void debug_token(struct PemdasToken *token, char *str) {
+  debug_token_o(token, str, 1);
 }
+
 // #include "debug.h"
 // #include "string.h"
 // #include "stdlib.h"

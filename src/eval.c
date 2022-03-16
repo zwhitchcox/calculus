@@ -12,7 +12,6 @@ int pemdas_eval(struct PemdasToken *token) {
   int ops_performed = 0;
   enum PemdasTokenType last;
   while (token) {
-    debug_token_s(token, "pemdas_eval");
     switch (token->type) {
       case PEMDAS_EXPR:
         ops_performed += pemdas_eval_expr(token->data);
@@ -25,24 +24,25 @@ int pemdas_eval(struct PemdasToken *token) {
     }
     token = token->next;
   }
-  printf("total ops: %d\n", ops_performed);
   return ops_performed;
 }
 // evaluate a function, whichever one needs to be evaluated
 int pemdas_eval_expr(struct PemdasToken *token) {
-  int i = 0;
   int ops_performed = 0;
-  for (int (*op)(pemdas_token_t*) = eval_fns[i]; i < eval_fns_len; op = eval_fns[++i]) {
-    int cur_ops_performed = 0;
-    while (cur_ops_performed = op(token)) {
-      ops_performed += cur_ops_performed;
-      cur_ops_performed = 0;
+  do {
+    int i = 0;
+    for (int (*op)(pemdas_token_t*) = eval_fns[i]; i < eval_fns_len; op = eval_fns[++i]) {
+      int cur_ops_performed = 0;
+      while (cur_ops_performed = op(token)) {
+        ops_performed += cur_ops_performed;
+        cur_ops_performed = 0;
+      }
+      if (ops_performed) {
+        return ops_performed;
+      }
     }
-    if (ops_performed) {
-      return ops_performed;
-    }
-  }
-  return 0;
+  } while (token = token->next);
+  return ops_performed;
 }
 
 int pemdas_eval_p(struct PemdasToken *token) {
@@ -83,7 +83,6 @@ void simplify_frac(struct PemdasToken *token) {
 
 
 int pemdas_eval_frac_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(struct Frac *o1, struct Frac *o2)) {
-  debug_token_s(token, "pemdas_eval_frac_op");
   int ops_performed = 0;
   while (token && token->next) {
     // printf("token type: %s\n", get_pemdas_token_type_str(token->type));
@@ -112,6 +111,7 @@ int pemdas_eval_frac_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(
       token = token->next;
     }
   }
+
   return ops_performed;
 }
 
@@ -128,10 +128,5 @@ int pemdas_eval_a(struct PemdasToken *token) {
 }
 
 int pemdas_eval_s(struct PemdasToken *token) {
-  if (token->type == PEMDAS_INT) {
-    debug_token_s(token, "pemdas_eval_s:");
-    // printf("next: %p, type: %s\n", token->next, get_pemdas_token_type_str(token->next->type));
-  }
-
   return pemdas_eval_frac_op(token, PEMDAS_SUB, frac_sub);
 }
