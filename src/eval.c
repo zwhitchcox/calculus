@@ -51,9 +51,13 @@ int pemdas_eval_p(struct PemdasToken *token) {
   while (token) {
     if (token->type == PEMDAS_EXPR) {
       ops_performed += pemdas_eval_expr(token->data);
-    }
-    if (!((pemdas_expr_token_t *) token)->data->next) {
-
+      // flatten parentheses
+      pemdas_token_t *inner_token = ((pemdas_expr_token_t *) token)->data;
+      if (!inner_token->next) {
+        token->type = inner_token->type;
+        token->data = inner_token->data;
+        free(inner_token);
+      }
     }
     token = token->next;
   }
@@ -106,9 +110,7 @@ int pemdas_eval_frac_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(
 
     char str[10000];
 
-    debug_token("op", token);
     if (is_num(prev) && is_num(next)) {
-      debug_token("frac_op", token);
       ensure_frac(prev);
       ensure_frac(next);
       fn(prev->data, next->data);
