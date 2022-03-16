@@ -18,6 +18,7 @@ void eval_and_print(char *src) {
   struct PemdasToken *chain = pemdas_parse(longer_src);
   print_chain(longer_src, chain);
   while (pemdas_eval(chain)) {
+    printf("printing: ");
     print_chain(longer_src, chain);
   }
   printf("\n");
@@ -26,7 +27,8 @@ void eval_and_print(char *src) {
 
 // parse ast from string
 int main() {
-  eval_and_print("1 + 1 + 2 - 3 * 4");
-  eval_and_print("1 / 2 * 3");
-  eval_and_print("x = 100 * 3 / 4");
+  // eval_and_print("1 + 1 + 2 - 3 * 4");
+  // eval_and_print("1 / 2 * 3");
+  // eval_and_print("x = 100 * 3 / 4");
+  eval_and_print("x = 100 / (4 - 2)");
 }

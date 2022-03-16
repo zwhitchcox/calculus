@@ -59,13 +59,13 @@ typedef struct PemdasOpToken {
 } pemdas_op_token_t;
 
 /* token - inequalities */
-enum PemdasIneq {
+printable_enum(PemdasIneq, pemdas_ineq,
   PEMDAS_EQ,
   PEMDAS_GT,
   PEMDAS_GTE,
   PEMDAS_LT,
   PEMDAS_LTE,
-};
+);
 
 typedef struct PemdasIneqToken {
   enum PemdasTokenType type;

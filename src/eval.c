@@ -2,6 +2,7 @@
 #include "print.h"
 #include "parse.h"
 #include "frac.h"
+#include "debug.h"
 
 
 int (*eval_fns[])(pemdas_token_t*) = {pemdas_eval_p, pemdas_eval_e, pemdas_eval_d, pemdas_eval_m, pemdas_eval_a, pemdas_eval_s};
@@ -9,7 +10,9 @@ int eval_fns_len = sizeof(eval_fns) / sizeof(eval_fns[0]);
 
 int pemdas_eval(struct PemdasToken *token) {
   int ops_performed = 0;
+  enum PemdasTokenType last;
   while (token) {
+    debug_token_s(token, "pemdas_eval");
     switch (token->type) {
       case PEMDAS_EXPR:
         ops_performed += pemdas_eval_expr(token->data);
@@ -22,6 +25,7 @@ int pemdas_eval(struct PemdasToken *token) {
     }
     token = token->next;
   }
+  printf("total ops: %d\n", ops_performed);
   return ops_performed;
 }
 // evaluate a function, whichever one needs to be evaluated
@@ -79,6 +83,7 @@ void simplify_frac(struct PemdasToken *token) {
 
 
 int pemdas_eval_frac_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(struct Frac *o1, struct Frac *o2)) {
+  debug_token_s(token, "pemdas_eval_frac_op");
   int ops_performed = 0;
   while (token && token->next) {
     // printf("token type: %s\n", get_pemdas_token_type_str(token->type));
@@ -123,5 +128,10 @@ int pemdas_eval_a(struct PemdasToken *token) {
 }
 
 int pemdas_eval_s(struct PemdasToken *token) {
+  if (token->type == PEMDAS_INT) {
+    debug_token_s(token, "pemdas_eval_s:");
+    // printf("next: %p, type: %s\n", token->next, get_pemdas_token_type_str(token->next->type));
+  }
+
   return pemdas_eval_frac_op(token, PEMDAS_SUB, frac_sub);
 }

@@ -6,7 +6,6 @@ struct LLInt *new_llint(int num) {
   llint->num = num;
 }
 
-
 struct LLInt *sieve_of_eratosthenes(int max) {
   int arr[max+1];
   for (int i = 2; i <= max; i++) {

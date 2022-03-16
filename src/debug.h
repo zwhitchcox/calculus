@@ -1,3 +1,11 @@
+#include "parse.h"
+
+#ifndef __PEMDAS_DEBUG__
+#define __PEMDAS_DEBUG__
+void debug_token_s(struct PemdasToken *token, char *str);
+void debug_token(struct PemdasToken *token);
+#endif /* __PEMDAS_DEBUG__ */
+
 // #include <string.h>
 
 // #ifndef __PEMDAS_DEBUG__
