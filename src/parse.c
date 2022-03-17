@@ -35,7 +35,7 @@ struct PemdasVarToken *pemdas_parse_num(char *str, int *len) {
   }
   (*len) = str - start;
   start = str;
-  while (isalpha(*(str+1))) {
+  while (isalpha(*str)) {
     str++;
   }
   (*len) += str - start;

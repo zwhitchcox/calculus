@@ -26,6 +26,7 @@ int pemdas_sprint_op(char *str, struct PemdasOpToken *op_token) {
 int pemdas_sprint_var(char *str, struct PemdasVarToken *var_token) {
   char *start = str;
   struct PemdasVar *var = var_token->data;
+  int len = 0;
   if (var->num != var->den || !strlen(var->name)) {
     long long num = var->num;
     long long den = var->den;
@@ -33,15 +34,15 @@ int pemdas_sprint_var(char *str, struct PemdasVarToken *var_token) {
       long long remainder = num % den;
       long long quotient = num / den;
       if (remainder) {
-        return sprintf(str, "%lld %lld/%lld", quotient, remainder, den);
+        str += sprintf(str, "%lld %lld/%lld", quotient, remainder, den);
       } else {
-        return sprintf(str, "%lld", quotient);
+        str += sprintf(str, "%lld", quotient);
       }
     } else {
-      return sprintf(str, "%lld/%lld", num, den);
+      str += sprintf(str, "%lld/%lld", num, den);
     }
   }
-  str += sprintf(str, "%s", var_token->data->name);
+  str += sprintf(str, "%s", var->name);
   return str - start;
 }
 

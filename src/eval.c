@@ -68,7 +68,7 @@ int pemdas_eval_e(struct PemdasToken *token) {
   return 0;
 }
 
-int is_var(struct PemdasToken *token) {
+int is_var(struct PemdasVarToken *token) {
   return token->type == PEMDAS_VAR;
 }
 
@@ -83,6 +83,9 @@ void simplify_var(struct PemdasVarToken *token) {
 
 int pemdas_eval_var_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(struct PemdasVar *o1, struct PemdasVar *o2)) {
   int ops_performed = 0;
+  struct PemdasVarToken *next;
+  struct PemdasVarToken *prev;
+  struct PemdasToken *after;
   while (token && token->next) {
     if (!(token->type == PEMDAS_OP && (enum PemdasOp) token->data == op)) {
       token = token->next;
@@ -91,10 +94,10 @@ int pemdas_eval_var_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(s
 
     char str[10000];
 
-    if (is_var(token->prev) && is_var(token->next)) {
-      struct PemdasVarToken *next = (pemdas_var_token_t *) token->next;
-      struct PemdasVarToken *prev = (pemdas_var_token_t *) token->prev;
-      struct PemdasToken *after = next->next;
+    next = (pemdas_var_token_t *) token->next;
+    prev = (pemdas_var_token_t *) token->prev;
+    if (is_var(prev) && is_var(next) && !strcmp(next->data->name, prev->data->name)) {
+      after = next->next;
       fn(prev->data, next->data);
       free(token);
       prev->next = after;
@@ -104,9 +107,8 @@ int pemdas_eval_var_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(s
       simplify_var(prev);
       ops_performed++;
       token = (pemdas_token_t *) prev;
-    } else {
-      token = token->next;
     }
+    token = token->next;
   }
 
   return ops_performed;
