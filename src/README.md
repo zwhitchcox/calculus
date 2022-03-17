@@ -1,6 +1,6 @@
-# PEMDAS
+# PEDMAS
 
-PEMDAS is an acronym for
+PEDMAS is an acronym for
   * Parentheses
   * Exponents
   * Multiplication and Division

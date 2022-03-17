@@ -2,13 +2,13 @@
 #include <stdlib.h>
 
 
-#ifndef __PEMDAS_TOKEN__
-#define __PEMDAS_TOKEN__
+#ifndef __PEDMAS_TOKEN__
+#define __PEDMAS_TOKEN__
 
 #include "common.h"
 #include "var.h"
 
-#define MAX_PEMDAS_ENUM_STR 100*1024
+#define MAX_PEDMAS_ENUM_STR 100*1024
 
 /* debugging */
 static int count_occurrences(char *str, const char *delim) {
@@ -38,11 +38,11 @@ static char **split(char *str, const char *del, int *len) {
 #define printable_enum(type, type_camel, vars...) enum type {vars}; \
   static long enum_##type_camel##_nums[] = {vars}; \
   static char *get_##type_camel##_str(enum type _enum) { \
-    const char pemdas_debug_enum_delim[3] = ", "; \
+    const char pedmas_debug_enum_delim[3] = ", "; \
     int len = 0; \
-    static char s[MAX_PEMDAS_ENUM_STR]; \
+    static char s[MAX_PEDMAS_ENUM_STR]; \
     strcpy(s, #vars); \
-    char **strs = split(s, pemdas_debug_enum_delim, &len); \
+    char **strs = split(s, pedmas_debug_enum_delim, &len); \
     int i = 0; \
     while (enum_##type_camel##_nums[i] != _enum && i < len) { \
       i++; \
@@ -52,72 +52,72 @@ static char **split(char *str, const char *del, int *len) {
 
 
 
-printable_enum(PemdasTokenType, pemdas_token_type,
-  PEMDAS_DUMMY, // used internally
-  PEMDAS_OP,
-  PEMDAS_VAR,
-  PEMDAS_EXPR,
-  PEMDAS_INEQ,
+printable_enum(PedmasTokenType, pedmas_token_type,
+  PEDMAS_DUMMY, // used internally
+  PEDMAS_OP,
+  PEDMAS_VAR,
+  PEDMAS_EXPR,
+  PEDMAS_INEQ,
 )
 
-typedef struct PemdasToken {
-  enum PemdasTokenType type;
-  struct PemdasToken *prev;
-  struct PemdasToken *next;
+typedef struct PedmasToken {
+  enum PedmasTokenType type;
+  struct PedmasToken *prev;
+  struct PedmasToken *next;
   void *data;
-} pemdas_token_t;
+} pedmas_token_t;
 
 /* token - operations */
-printable_enum(PemdasOp, pemdas_op,
-  PEMDAS_ADD,
-  PEMDAS_SUB,
-  PEMDAS_MUL,
-  PEMDAS_DIV,
+printable_enum(PedmasOp, pedmas_op,
+  PEDMAS_ADD,
+  PEDMAS_SUB,
+  PEDMAS_MUL,
+  PEDMAS_DIV,
 )
-typedef struct PemdasOpToken {
-  enum PemdasTokenType type;
-  struct PemdasToken *prev;
-  struct PemdasToken *next;
-  enum PemdasOp data;
-} pemdas_op_token_t;
+typedef struct PedmasOpToken {
+  enum PedmasTokenType type;
+  struct PedmasToken *prev;
+  struct PedmasToken *next;
+  enum PedmasOp data;
+} pedmas_op_token_t;
 
 /* token - inequalities */
-printable_enum(PemdasIneq, pemdas_ineq,
-  PEMDAS_EQ,
-  PEMDAS_GT,
-  PEMDAS_GTE,
-  PEMDAS_LT,
-  PEMDAS_LTE,
+printable_enum(PedmasIneq, pedmas_ineq,
+  PEDMAS_EQ,
+  PEDMAS_GT,
+  PEDMAS_GTE,
+  PEDMAS_LT,
+  PEDMAS_LTE,
 );
 
-typedef struct PemdasIneqToken {
-  enum PemdasTokenType type;
-  struct PemdasToken *prev;
-  struct PemdasToken *next;
-  enum PemdasIneq data;
-} pemdas_ineq_token_t;
+typedef struct PedmasIneqToken {
+  enum PedmasTokenType type;
+  struct PedmasToken *prev;
+  struct PedmasToken *next;
+  enum PedmasIneq data;
+} pedmas_ineq_token_t;
 
 /* token - var */
-typedef struct PemdasVarToken {
-  enum PemdasTokenType type;
-  struct PemdasToken *prev;
-  struct PemdasToken *next;
-  struct PemdasVar *data;
-} pemdas_var_token_t;
+typedef struct PedmasVarToken {
+  enum PedmasTokenType type;
+  struct PedmasToken *prev;
+  struct PedmasToken *next;
+  struct PedmasVar *data;
+} pedmas_var_token_t;
 
 
 /* token - expr */
-typedef struct PemdasExprToken {
-  enum PemdasTokenType type;
-  struct PemdasToken *prev;
-  struct PemdasToken *next;
-  struct PemdasToken *data;
-} pemdas_expr_token_t;
+typedef struct PedmasExprToken {
+  enum PedmasTokenType type;
+  struct PedmasToken *prev;
+  struct PedmasToken *next;
+  struct PedmasToken *data;
+} pedmas_expr_token_t;
 
 // token creators TODO: refactor
-struct PemdasToken *pemdas_new_token();
-struct PemdasOpToken *pemdas_new_op_token();
-struct PemdasExprToken *pemdas_new_expr_token();
-struct PemdasVarToken *pemdas_new_var_token(char *name, ll_t num, ll_t den);
-struct PemdasIneqToken *pemdas_new_ineq_token(enum PemdasIneq);
-#endif /*__PEMDAS_TOKEN__*/
+struct PedmasToken *pedmas_new_token();
+struct PedmasOpToken *pedmas_new_op_token();
+struct PedmasExprToken *pedmas_new_expr_token();
+struct PedmasVarToken *pedmas_new_var_token(char *name, ll_t num, ll_t den);
+struct PedmasIneqToken *pedmas_new_ineq_token(enum PedmasIneq);
+#endif /*__PEDMAS_TOKEN__*/

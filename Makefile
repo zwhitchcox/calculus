@@ -18,7 +18,7 @@ clean:
 	./build/$@
 
 .PHONY: test
-pemdas.debug: clean
+pedmas.debug: clean
 	mkdir -p build
-	$(CC) $(shell ls src/*.h | grep -v test) $(shell ls src/*.c | grep -v test) -o ./build/pemdas.debug ./src/pemdas.test.c -lm
-	gdb -ex run ./build/pemdas.debug
+	$(CC) $(shell ls src/*.h | grep -v test) $(shell ls src/*.c | grep -v test) -o ./build/pedmas.debug ./src/pedmas.test.c -lm
+	gdb -ex run ./build/pedmas.debug
