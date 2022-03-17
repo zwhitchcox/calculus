@@ -3,6 +3,7 @@
 #include "parse.h"
 #include "print.h"
 #include "eval.h"
+#include "debug.h"
 
 #define MAX_STR 10000
 
