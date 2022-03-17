@@ -2,15 +2,25 @@
 #include <stdio.h>
 
 #include "parse.h"
-#include "frac.h"
+#include "var.h"
 #include "string.h"
 #include "print.h"
 #include "token.h"
 #include "debug.h"
 
 
+struct PemdasVarToken *pemdas_parse_var(char *str, int *len) {
+  if (isalpha(*str)) {
+    char *start = str++;
+    while (isalnum(*str) || isdigit(*str)) str++;
+    *len = str - start;
+    return pemdas_new_var_token(strndup(start, *len), 1, 1);
+  }
+  return NULL;
+}
 
-struct PemdasIntToken *pemdas_parse_int(char *str, int *len) {
+struct PemdasVarToken *pemdas_parse_num(char *str, int *len) {
+  char *start = str;
   if (!isdigit(*str)) {
     return NULL;
   }
@@ -19,9 +29,17 @@ struct PemdasIntToken *pemdas_parse_int(char *str, int *len) {
     num *= 10;
     num += *str - '0';
     str++;
-    (*len)++;
   }
-  return pemdas_new_int_token(num);
+  while (isblank(*str)) {
+    str++;
+  }
+  (*len) = str - start;
+  start = str;
+  while (isalpha(*(str+1))) {
+    str++;
+  }
+  (*len) += str - start;
+  return pemdas_new_var_token(strndup(start, str - start), num, 1);
 }
 
 struct PemdasOpToken *pemdas_parse_op(char *str, int *len) {
@@ -65,16 +83,7 @@ struct PemdasIneqToken *pemdas_parse_ineq(char *str, int *len) {
   return NULL;
 }
 
-struct PemdasVarToken *pemdas_parse_var(char *str, int *len) {
-  if (isalpha(*str)) {
-    char *start = str++;
-    while (isalnum(*str) || isdigit(*str)) str++;
-    *len = str - start;
-    return pemdas_new_var_token(strndup(start, *len),
-                                (pemdas_token_t *)pemdas_new_frac_token(1, 1));
-  }
-  return NULL;
-}
+
 struct PemdasExprToken *pemdas_parse_paren(char *str, int *len) {
   char *strp = str;
   struct PemdasExprToken *token;
@@ -91,7 +100,7 @@ struct PemdasExprToken *pemdas_parse_paren(char *str, int *len) {
   }
   return NULL;
 }
-#define skip_blank(var)
+
 struct PemdasExprToken *pemdas_parse_expr(char *str, int *len) {
   char *strp = str;
   struct PemdasToken *cur = pemdas_new_token();
@@ -105,7 +114,7 @@ struct PemdasExprToken *pemdas_parse_expr(char *str, int *len) {
       strp++;
     }
     if (!((cur->next = (pemdas_token_t *)pemdas_parse_paren(strp, &_len)) ||
-          (cur->next = (pemdas_token_t *)pemdas_parse_int(strp, &_len)) ||
+          (cur->next = (pemdas_token_t *)pemdas_parse_num(strp, &_len)) ||
           (cur->next = (pemdas_token_t *)pemdas_parse_op(strp, &_len)) ||
           (cur->next = (pemdas_token_t *)pemdas_parse_var(strp, &_len)))) {
       break;
@@ -132,7 +141,6 @@ struct PemdasToken *pemdas_parse(char *str) {
   int len = 0;
   char *strp = str;
   while (*strp) {
-    skip_blank(strp)
     if (!*strp) {
       break;
     }

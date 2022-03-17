@@ -7,17 +7,9 @@ void debug_token_o(struct PemdasToken *token, char *str, int nl) {
     case PEMDAS_OP:
       printf(":%s", get_pemdas_op_str(((pemdas_op_token_t *)token)->data));
       break;
-    case PEMDAS_INT:
-      printf(":%ld", (size_t) token->data);
-      break;
-    case PEMDAS_FRAC:
-      printf(":%d/%d", ((pemdas_frac_token_t *)token)->data->num, ((pemdas_frac_token_t *)token)->data->den);
-      break;
     case PEMDAS_VAR: ;
-      struct PemdasVarToken *var_token = (struct PemdasVarToken *) token;
-      struct PemdasToken *co_token = var_token->data->coefficient;
-      printf(":%s:val", var_token->data->name);
-      debug_token_o(co_token, "", 0);
+      struct PemdasVar *var = (struct PemdasVar *) token->data;
+      printf(":name->%s,num->%lld,den->%lld", var->name, var->num, var->den);
       break;
     case PEMDAS_INEQ:
       printf(":%s", get_pemdas_ineq_str(((pemdas_ineq_token_t *) token)->data));

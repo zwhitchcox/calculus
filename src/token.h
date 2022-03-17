@@ -1,11 +1,39 @@
 #include <string.h>
+#include <stdlib.h>
+
 
 #ifndef __PEMDAS_TOKEN__
 #define __PEMDAS_TOKEN__
 
+#include "common.h"
+#include "var.h"
+
 #define MAX_PEMDAS_ENUM_STR 100*1024
 
-char **split(char *str, const char *del, int *len);
+/* debugging */
+static int count_occurrences(char *str, const char *delim) {
+  int delim_len = strlen(delim);
+  int count = 0;
+  while (*str) {
+    if (!strncmp(str, delim, delim_len)) {
+      count++;
+    }
+    str++;
+  }
+  return count;
+}
+
+static char **split(char *str, const char *del, int *len) {
+  *len = count_occurrences(str, del);
+  char **arr = malloc(sizeof(char*) * (*len));
+  char *token = strtok(str, del);
+  int i = 0;
+  while (token != NULL) {
+    arr[i++] = strdup(token);
+    token = strtok(NULL, del);
+  }
+  return arr;
+}
 
 #define printable_enum(type, type_camel, vars...) enum type {vars}; \
   static long enum_##type_camel##_nums[] = {vars}; \
@@ -23,11 +51,10 @@ char **split(char *str, const char *del, int *len);
   }
 
 
+
 printable_enum(PemdasTokenType, pemdas_token_type,
   PEMDAS_DUMMY, // used internally
   PEMDAS_OP,
-  PEMDAS_INT,
-  PEMDAS_FRAC,
   PEMDAS_VAR,
   PEMDAS_EXPR,
   PEMDAS_INEQ,
@@ -70,21 +97,6 @@ typedef struct PemdasIneqToken {
   enum PemdasIneq data;
 } pemdas_ineq_token_t;
 
-/* token - numbers */
-typedef struct PemdasIntToken {
-  enum PemdasTokenType type;
-  struct PemdasToken *prev;
-  struct PemdasToken *next;
-  int data;
-} pemdas_int_token_t;
-
-typedef struct PemdasFracToken {
-  enum PemdasTokenType type;
-  struct PemdasToken *prev;
-  struct PemdasToken *next;
-  struct Frac *data;
-} pemdas_frac_token_t;
-
 /* token - var */
 typedef struct PemdasVarToken {
   enum PemdasTokenType type;
@@ -93,10 +105,6 @@ typedef struct PemdasVarToken {
   struct PemdasVar *data;
 } pemdas_var_token_t;
 
-typedef struct PemdasVar {
-  char *name;
-  struct PemdasToken *coefficient;
-} pemdas_var_t;
 
 /* token - expr */
 typedef struct PemdasExprToken {
@@ -109,9 +117,7 @@ typedef struct PemdasExprToken {
 // token creators TODO: refactor
 struct PemdasToken *pemdas_new_token();
 struct PemdasOpToken *pemdas_new_op_token();
-struct PemdasIntToken *pemdas_new_int_token();
 struct PemdasExprToken *pemdas_new_expr_token();
-struct PemdasFracToken *pemdas_new_frac_token(int num, int den);
-struct PemdasVarToken *pemdas_new_var_token(char *name, struct PemdasToken *coef);
+struct PemdasVarToken *pemdas_new_var_token(char *name, ll_t num, ll_t den);
 struct PemdasIneqToken *pemdas_new_ineq_token(enum PemdasIneq);
 #endif /*__PEMDAS_TOKEN__*/

@@ -1,11 +1,12 @@
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-#include "frac.h"
+#include "var.h"
 
 #ifndef __PEMDAS_PARSE__
 #define __PEMDAS_PARSE__
+
 
 // parsers
 struct PemdasToken *pemdas_parse(char *str);
