@@ -46,6 +46,7 @@ printable_enum(PemdasOp, pemdas_op,
   PEMDAS_SUB,
   PEMDAS_MUL,
   PEMDAS_DIV,
+  PEMDAS_EXP,
 )
 typedef struct PemdasOpToken {
   enum PemdasTokenType type;

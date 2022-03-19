@@ -38,6 +38,9 @@ struct PemdasOpToken *pemdas_parse_op(char *str, int *len) {
     case '*':
       *len = 1;
       return pemdas_new_op_token(PEMDAS_MUL);
+    case '^':
+      *len = 1;
+      return pemdas_new_op_token(PEMDAS_EXP);
   }
   return NULL;
 }
