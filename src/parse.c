@@ -2,7 +2,6 @@
 #include <stdio.h>
 
 #include "parse.h"
-#include "frac.h"
 #include "string.h"
 #include "print.h"
 #include "token.h"
@@ -38,6 +37,9 @@ struct PemdasOpToken *pemdas_parse_op(char *str, int *len) {
     case '*':
       *len = 1;
       return pemdas_new_op_token(PEMDAS_MUL);
+    case '^':
+      *len = 1;
+      return pemdas_new_op_token(PEMDAS_EXP);
   }
   return NULL;
 }
@@ -70,8 +72,7 @@ struct PemdasVarToken *pemdas_parse_var(char *str, int *len) {
     char *start = str++;
     while (isalnum(*str) || isdigit(*str)) str++;
     *len = str - start;
-    return pemdas_new_var_token(strndup(start, *len),
-                                (pemdas_token_t *)pemdas_new_frac_token(1, 1));
+    return pemdas_new_var_token(strndup(start, *len));
   }
   return NULL;
 }

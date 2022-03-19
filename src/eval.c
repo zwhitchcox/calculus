@@ -82,19 +82,6 @@ int is_num(struct PemdasToken *token) {
   return token->type == PEMDAS_INT || token->type == PEMDAS_FRAC;
 }
 
-void simplify_frac(struct PemdasToken *token) {
-  if (token->type != PEMDAS_FRAC) {
-    fprintf(stderr, "simplify: not frac\n");
-    return;
-  }
-  if (((struct PemdasFracToken *) token)->data->den == 1) {
-    token->type = PEMDAS_INT;
-    token->data = (void *) (size_t) ((struct PemdasFracToken *) token)->data->num;
-    return;
-  }
-  frac_reduce(token->data);
-}
-
 
 int pemdas_eval_frac_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(struct Frac *o1, struct Frac *o2)) {
   int ops_performed = 0;
@@ -130,12 +117,8 @@ int pemdas_eval_frac_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(
   return ops_performed;
 }
 
-int pemdas_eval_m(struct PemdasToken *token) {
+int pemdas_eval_md(struct PemdasToken *token) {
   return pemdas_eval_frac_op(token, PEMDAS_MUL, frac_mul);
-}
-
-int pemdas_eval_d(struct PemdasToken *token) {
-  return pemdas_eval_frac_op(token, PEMDAS_DIV, frac_div);
 }
 
 int pemdas_eval_a(struct PemdasToken *token) {

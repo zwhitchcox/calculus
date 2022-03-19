@@ -27,7 +27,6 @@ printable_enum(PemdasTokenType, pemdas_token_type,
   PEMDAS_DUMMY, // used internally
   PEMDAS_OP,
   PEMDAS_INT,
-  PEMDAS_FRAC,
   PEMDAS_VAR,
   PEMDAS_EXPR,
   PEMDAS_INEQ,
@@ -46,6 +45,7 @@ printable_enum(PemdasOp, pemdas_op,
   PEMDAS_SUB,
   PEMDAS_MUL,
   PEMDAS_DIV,
+  PEMDAS_EXP,
 )
 typedef struct PemdasOpToken {
   enum PemdasTokenType type;
@@ -78,25 +78,13 @@ typedef struct PemdasIntToken {
   int data;
 } pemdas_int_token_t;
 
-typedef struct PemdasFracToken {
-  enum PemdasTokenType type;
-  struct PemdasToken *prev;
-  struct PemdasToken *next;
-  struct Frac *data;
-} pemdas_frac_token_t;
-
 /* token - var */
 typedef struct PemdasVarToken {
   enum PemdasTokenType type;
   struct PemdasToken *prev;
   struct PemdasToken *next;
-  struct PemdasVar *data;
+  char *data;
 } pemdas_var_token_t;
-
-typedef struct PemdasVar {
-  char *name;
-  struct PemdasToken *coefficient;
-} pemdas_var_t;
 
 /* token - expr */
 typedef struct PemdasExprToken {
@@ -111,7 +99,6 @@ struct PemdasToken *pemdas_new_token();
 struct PemdasOpToken *pemdas_new_op_token();
 struct PemdasIntToken *pemdas_new_int_token();
 struct PemdasExprToken *pemdas_new_expr_token();
-struct PemdasFracToken *pemdas_new_frac_token(int num, int den);
 struct PemdasVarToken *pemdas_new_var_token(char *name, struct PemdasToken *coef);
 struct PemdasIneqToken *pemdas_new_ineq_token(enum PemdasIneq);
 #endif /*__PEMDAS_TOKEN__*/

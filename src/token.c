@@ -9,21 +9,10 @@ struct PemdasToken *pemdas_new_token() {
   return malloc(sizeof(struct PemdasToken));
 }
 
-struct PemdasFracToken *pemdas_new_frac_token(int num, int den) {
-  struct PemdasFracToken *token = (struct PemdasFracToken *)pemdas_new_token();
-  token->type = PEMDAS_FRAC;
-  token->data = frac_new(num, den);
-  return token;
-}
-
-struct PemdasVarToken *pemdas_new_var_token(char *name,
-                                            struct PemdasToken *coef) {
+struct PemdasVarToken *pemdas_new_var_token(char *name) {
   struct PemdasVarToken *token = (struct PemdasVarToken *)pemdas_new_token();
-  struct PemdasVar *var = malloc(sizeof(struct PemdasVar));
-  var->name = name;
-  var->coefficient = coef;
   token->type = PEMDAS_VAR;
-  token->data = var;
+  token->data = name;
   return token;
 }
 
