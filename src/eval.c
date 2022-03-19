@@ -115,17 +115,17 @@ int pemdas_eval_var_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(s
 }
 
 int pemdas_eval_m(struct PemdasToken *token) {
-  return pemdas_eval_var_op(token, PEMDAS_MUL, var_mul);
+  return pemdas_eval_var_op(token, PEMDAS_MUL, pemdas_var_mul);
 }
 
 int pemdas_eval_d(struct PemdasToken *token) {
-  return pemdas_eval_var_op(token, PEMDAS_DIV, var_div);
+  return pemdas_eval_var_op(token, PEMDAS_DIV, pemdas_var_div);
 }
 
 int pemdas_eval_a(struct PemdasToken *token) {
-  return pemdas_eval_var_op(token, PEMDAS_ADD, var_add);
+  return pemdas_eval_var_op(token, PEMDAS_ADD, pemdas_var_add);
 }
 
 int pemdas_eval_s(struct PemdasToken *token) {
-  return pemdas_eval_var_op(token, PEMDAS_SUB, var_sub);
+  return pemdas_eval_var_op(token, PEMDAS_SUB, pemdas_var_sub);
 }
