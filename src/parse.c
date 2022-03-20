@@ -114,24 +114,20 @@ struct PemdasToke *parse_terms(char *str) {
 
 }
 
-struct PemdasToken *parse_expression(char *str, int *len) {
+struct PemdasToken *parse_expression(char *str) {
   char *strp = str;
-  struct PemdasToken *cur = pemdas_new_token();
-  struct PemdasToken *dummy = cur;
-  cur->type = PEMDAS_DUMMY;
-  cur->next = NULL;
-  int _len;
+  int depth = 1;
   while (*strp) {
-    _len = 0;
-    while (isblank(*strp)) {
-      strp++;
+    if (*strp == '(') {
+      depth++;
+    } else if (*strp == ')') {
+      if (!--depth) {
+        parse_terms(strndup(str, strp - str));
+        break;
+      }
     }
-    while (*strp != ')' && *strp != '(') {
-      strp++;
-    }
+    strp++;
   }
-  *len = strp - str;
-
   cur->next = NULL;
   if (dummy->next) {
     dummy->next->prev = NULL;
@@ -139,19 +135,34 @@ struct PemdasToken *parse_expression(char *str, int *len) {
   return pemdas_new_expr_token(dummy->next);
 }
 
+int get_comparison_operator(char *str) {
+  if (strncmp(str, ">=", 2)) {
+    return GREATER_THAN_OR_EQUAL_TO;
+  } else if (strncmp(str, "<=", 2)) {
+    return LESS_THAN_OR_EQUAL_TO;
+  } else if (strncmp(str, "=", 1)) {
+    return EQUAL_TO;
+  } else if (strncmp(str, ">", 1)) {
+    return GREATER_THAN;
+  } else if (strncmp(str, "<", 1)) {
+    return LESS_THAN;
+  }
+  return 0;
+}
 
-struct PemdasToken *pemdas_parse(char *str) {
+struct PemdasToken *parse_equation(char *str) {
   struct PemdasToken *cur = pemdas_new_token();
   struct PemdasToken *dummy = cur;
   cur->type = PEMDAS_DUMMY;
   cur->next = NULL;
   int len = 0;
   char *strp = str;
+  enum comparison_operator
   while (*strp) {
-    skip_blank(strp)
-    if (!*strp) {
-      break;
+    while (!get) {
+
     }
+    skip_blank(strp)
     if (!((cur->next = (pemdas_token_t *)pemdas_parse_ineq(strp, &len)) ||
         (cur->next = (pemdas_token_t *)pemdas_parse_expr(strp, &len)))) {
       strp += len;

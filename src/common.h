@@ -51,16 +51,31 @@ typedef struct Expression {
   struct LLTerm *terms;
 } expression_t;
 
+printable_enum(ComparisonOperator, comparison_operator,
+  GREATER_THAN,
+  GREATER_THAN_OR_EQUAL_TO,
+  LESS_THAN,
+  LESS_THAN_OR_EQUAL_TO,
+  EQUAL_TO
+)
+
+typedef struct Inequality {
+  enum ComparisonOperator op;
+  struct Expression *left;
+  struct Inequality *right;
+} inequality_t;
+
 union Data {
   struct Expression *expression;
   struct Term *term;
   struct Variable *variable;
+  struct Inequality *inequality;
 };
 
 struct Token {
   enum TokenType type;
   union Data *data;
-  struct Token *power;
+  struct Expression *power;
 };
 
 #endif /* __PEMDAS_COMMON__ */
