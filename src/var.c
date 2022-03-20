@@ -39,10 +39,10 @@ ll_t get_lcd(ll_t x, ll_t y) {
   return cur_lcd*x*y;
 }
 
-struct PemdasVar *var_new(ll_t num, ll_t den) {
+struct PemdasVar *var_new(pemdas_frac_t *coef, pemdas_frac_t *pow) {
   struct PemdasVar *var = malloc(sizeof(struct PemdasVar));
-  var->num = num;
-  var->den = den;
+  var->coef = coef;
+  var->pow = pow;
 }
 
 void var_reduce(struct PemdasVar *var) {

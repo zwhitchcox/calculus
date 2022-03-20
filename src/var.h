@@ -6,15 +6,19 @@
 #include "token.h"
 #include "common.h"
 
+typedef struct PemdasFrac {
+  ll_t num;
+  ll_t den;
+} pemdas_frac_t;
 
 typedef struct PemdasVar {
   char *name;
-  ll_t num;
-  ll_t den;
-  struct PemdasVar *pow;
+  struct PemdasFrac *coef;
+  struct PemdasFrac *pow;
 } pemdas_var_t;
 
-struct PemdasVar *var_new(ll_t num, ll_t den);
+struct PemdasVar *var_new(struct PemdasFrac *coef, struct PemdasFrac *pow);
+struct PemdasVar *frac_new(ll_t num, ll_t den);
 ll_t get_gcd(ll_t x, ll_t y);
 ll_t get_lcd(ll_t x, ll_t y);
 void var_denominate(struct PemdasVar *var, ll_t den);

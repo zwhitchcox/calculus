@@ -16,8 +16,7 @@ clean:
 .PHONY: var.test
 var.test: clean
 	mkdir -p build
-	@echo $(shell ls src/{var,common}.{c,h})
-	$(CC) -o build/$@ $(shell ls src/{var,common}.{c,h}) src/$@.c -lm
+	$(CC) -o build/$@ $(shell ls src/{var,common,prime}.{c,h}) src/$@.c -lm
 	./build/$@
 
 .PHONY: test
