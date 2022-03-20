@@ -1,12 +1,12 @@
 #include <ctype.h>
 #include <stdio.h>
 
-#include "parse.h"
 #include "frac.h"
 #include "string.h"
 #include "print.h"
 #include "token.h"
 #include "debug.h"
+#include "common.h"
 
 
 
@@ -76,6 +76,23 @@ struct PemdasVarToken *pemdas_parse_var(char *str, int *len) {
   }
   return NULL;
 }
+struct PemdasExprToken *pemdas_parse_e(char *str, int *len) {
+  char *strp = str;
+  struct PemdasExprToken *token;
+  if (*strp == '(') {
+    token = pemdas_parse_expr(++strp, len);
+    strp+= *len;
+    if (*strp != ')') {
+      fprintf(stderr, "unexpected token at %s\n", str);
+      return NULL;
+    }
+    strp++;
+    *len = strp - str;
+    return token;
+  }
+  return NULL;
+}
+
 struct PemdasExprToken *pemdas_parse_paren(char *str, int *len) {
   char *strp = str;
   struct PemdasExprToken *token;
@@ -92,8 +109,12 @@ struct PemdasExprToken *pemdas_parse_paren(char *str, int *len) {
   }
   return NULL;
 }
-#define skip_blank(var)
-struct PemdasExprToken *pemdas_parse_expr(char *str, int *len) {
+
+struct PemdasToke *parse_terms(char *str) {
+
+}
+
+struct PemdasToken *parse_expression(char *str, int *len) {
   char *strp = str;
   struct PemdasToken *cur = pemdas_new_token();
   struct PemdasToken *dummy = cur;
@@ -105,15 +126,9 @@ struct PemdasExprToken *pemdas_parse_expr(char *str, int *len) {
     while (isblank(*strp)) {
       strp++;
     }
-    if (!((cur->next = (pemdas_token_t *)pemdas_parse_paren(strp, &_len)) ||
-          (cur->next = (pemdas_token_t *)pemdas_parse_int(strp, &_len)) ||
-          (cur->next = (pemdas_token_t *)pemdas_parse_op(strp, &_len)) ||
-          (cur->next = (pemdas_token_t *)pemdas_parse_var(strp, &_len)))) {
-      break;
+    while (*strp != ')' && *strp != '(') {
+      strp++;
     }
-    cur->next->prev = cur;
-    cur = cur->next;
-    strp += _len;
   }
   *len = strp - str;
 
