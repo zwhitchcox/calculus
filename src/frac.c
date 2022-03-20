@@ -1,8 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #include "frac.h"
 #include "prime.h"
+#include "common.h"
 
 
 int get_gcd(int x, int y) {
@@ -19,12 +21,14 @@ int get_gcd(int x, int y) {
 }
 
 struct LLInt *primes;
-int max_prime = 0;
+ll_t max_prime = 0;
 
-int get_lcd(int x, int y) {
-  int max = x > y ? x : y;
-  if (!(primes && max_prime < max)) {
-    primes = get_primes(max);
+ll_t get_lcd(ll_t x, ll_t y) {
+  ll_t max = x > y ? x : y;
+  if (!primes || max_prime < max) {
+    free_ll(primes);
+    primes = get_primes(max*2);
+    max_prime = max*2;
   }
   struct LLInt *primep = primes;
   int cur_lcd = 1;
@@ -38,6 +42,38 @@ int get_lcd(int x, int y) {
   }
   return cur_lcd*x*y;
 }
+
+void free_ll(struct LLInt *ll) {
+  struct LLInt *cur_prime = ll;
+  struct LLInt *last;
+  while(cur_prime) {
+    last = cur_prime;
+    cur_prime = cur_prime->next;
+    free(cur_prime);
+  }
+}
+
+struct LLInt *factor(ll_t num) {
+  if (!primes || max_prime < num) {
+    free_ll(primes);
+    primes = get_primes(num*2);
+    max_prime = num*2;
+  }
+  struct LLInt *factorization = new_llint(1);
+  struct LLInt *cur_factor = factorization;
+  struct LLInt *cur_prime = primes;
+  while (num && cur_prime && cur_prime->num < num) {
+    while ((num % cur_prime->num) == 0) {
+      num /= cur_prime->num;
+      cur_factor->next = new_llint(cur_prime->num);
+      cur_factor = cur_factor->next;
+      cur_factor->num = cur_prime->num;
+    }
+    cur_prime = cur_prime->next;
+  }
+  return factorization->next;
+}
+
 
 struct Frac *frac_new(int num, int den) {
   struct Frac *frac = malloc(sizeof(struct Frac));
@@ -85,6 +121,20 @@ void frac_mul(struct Frac *x, struct Frac *y) {
 void frac_div(struct Frac *x, struct Frac *y) {
   x->num *= y->den;
   x->den *= y->num;
+  frac_reduce(x);
+  free(y);
+}
+
+
+
+void frac_pow(struct Frac *x, struct Frac *y) {
+  x->num = pow(x->num, y->num);
+  struct LLInt *fx;
+  struct LLInt *fy;
+  if (y->num != 1) {
+    struct LLInt *fx = factor(x);
+    struct LLInt *fy = factor(y);
+  }
   frac_reduce(x);
   free(y);
 }

@@ -64,10 +64,6 @@ int pemdas_eval_p(struct PemdasToken *token) {
   return ops_performed;
 }
 
-int pemdas_eval_e(struct PemdasToken *token) {
-  return 0;
-}
-
 void ensure_frac(struct PemdasToken *token) {
   if (token->type == PEMDAS_FRAC) {
   } else if (token->type == PEMDAS_INT) {
@@ -128,6 +124,10 @@ int pemdas_eval_frac_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(
   }
 
   return ops_performed;
+}
+
+int pemdas_eval_e(struct PemdasToken *token) {
+  return 0;
 }
 
 int pemdas_eval_m(struct PemdasToken *token) {

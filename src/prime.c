@@ -1,12 +1,12 @@
 #include <stdlib.h>
 #include "prime.h"
 
-struct LLInt *new_llint(int num) {
+struct LLInt *new_llint(ll_t num) {
   struct LLInt *llint = malloc(sizeof(struct LLInt));
   llint->num = num;
 }
 
-struct LLInt *sieve_of_eratosthenes(int max) {
+struct LLInt *sieve_of_eratosthenes(ll_t max) {
   int arr[max+1];
   for (int i = 2; i <= max; i++) {
     arr[i] = 1;

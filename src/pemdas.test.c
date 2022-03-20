@@ -30,4 +30,5 @@ int main() {
   eval_and_print("1 / 2 * 3");
   eval_and_print("x = 100 * 3 / 4");
   eval_and_print("x = 100 / (4 - 2)");
+  eval_and_print("x = 4^2");
 }
