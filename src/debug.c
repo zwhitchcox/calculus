@@ -8,10 +8,10 @@ void debug_token_o(struct PemdasToken *token, char *str, int nl) {
       printf(":%s", get_pemdas_op_str(((pemdas_op_token_t *)token)->data));
       break;
     case PEMDAS_INT:
-      printf(":%ld", (size_t) token->data);
+      printf(":%lld", (ll_t) token->data);
       break;
     case PEMDAS_FRAC:
-      printf(":%d/%d", ((pemdas_frac_token_t *)token)->data->num, ((pemdas_frac_token_t *)token)->data->den);
+      printf(":%lld/%lld", ((pemdas_frac_token_t *)token)->data->num, ((pemdas_frac_token_t *)token)->data->den);
       break;
     case PEMDAS_VAR: ;
       struct PemdasVarToken *var_token = (struct PemdasVarToken *) token;

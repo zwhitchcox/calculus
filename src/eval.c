@@ -122,9 +122,8 @@ int pemdas_eval_frac_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(
       simplify_frac(prev);
       ops_performed++;
       token = prev;
-    } else {
-      token = token->next;
     }
+    token = token->next;
   }
 
   return ops_performed;

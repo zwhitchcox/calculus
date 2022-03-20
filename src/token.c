@@ -2,8 +2,10 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "frac.h"
+#include "common.h"
 
 struct PemdasToken *pemdas_new_token() {
   return malloc(sizeof(struct PemdasToken));
@@ -41,7 +43,8 @@ struct PemdasIneqToken *pemdas_new_ineq_token(enum PemdasIneq ineq_type) {
   return token;
 }
 
-struct PemdasIntToken *pemdas_new_int_token(int data) {
+struct PemdasIntToken *pemdas_new_int_token(ll_t data) {
+  printf("new int data: %lld\n", data);
   struct PemdasIntToken *token = (struct PemdasIntToken *)pemdas_new_token();
   token->type = PEMDAS_INT;
   token->data = data;
@@ -53,29 +56,4 @@ struct PemdasExprToken *pemdas_new_expr_token(struct PemdasToken *chain) {
   token->type = PEMDAS_EXPR;
   token->data = chain;
   return token;
-}
-
-/* debugging */
-int count_occurrences(char *str, const char *delim) {
-  int delim_len = strlen(delim);
-  int count = 0;
-  while (*str) {
-    if (!strncmp(str, delim, delim_len)) {
-      count++;
-    }
-    str++;
-  }
-  return count;
-}
-
-char **split(char *str, const char *del, int *len) {
-  *len = count_occurrences(str, del);
-  char **arr = malloc(sizeof(char*) * (*len));
-  char *token = strtok(str, del);
-  int i = 0;
-  while (token != NULL) {
-    arr[i++] = strdup(token);
-    token = strtok(NULL, del);
-  }
-  return arr;
 }

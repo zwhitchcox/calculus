@@ -14,13 +14,14 @@ struct PemdasIntToken *pemdas_parse_int(char *str, int *len) {
   if (!isdigit(*str)) {
     return NULL;
   }
-  int num = 0;
+  ll_t num = 0;
   while (isdigit(*str)) {
     num *= 10;
     num += *str - '0';
     str++;
     (*len)++;
   }
+  struct PemdasIntToken* token = pemdas_new_int_token(num);
   return pemdas_new_int_token(num);
 }
 
