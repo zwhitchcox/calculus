@@ -39,25 +39,25 @@ ll_t get_lcd(ll_t x, ll_t y) {
   return cur_lcd*x*y;
 }
 
-struct PedmasVar *var_new(ll_t num, ll_t den) {
-  struct PedmasVar *var = malloc(sizeof(struct PedmasVar));
+struct PemdasVar *var_new(ll_t num, ll_t den) {
+  struct PemdasVar *var = malloc(sizeof(struct PemdasVar));
   var->num = num;
   var->den = den;
 }
 
-void var_reduce(struct PedmasVar *var) {
+void var_reduce(struct PemdasVar *var) {
   ll_t var_gcd = get_gcd(var->num, var->den);
   var->num /= var_gcd;
   var->den /= var_gcd;
 }
 
-void var_denominate(struct PedmasVar *var, ll_t den) {
+void var_denominate(struct PemdasVar *var, ll_t den) {
   ll_t x = den / var->den;
   var->num *= x;
   var->den *= x;
 }
 
-void var_add(struct PedmasVar *x, struct PedmasVar *y) {
+void var_add(struct PemdasVar *x, struct PemdasVar *y) {
   ll_t lcd = get_lcd(x->den, y->den);
   var_denominate(x, lcd);
   var_denominate(y, lcd);
@@ -66,7 +66,7 @@ void var_add(struct PedmasVar *x, struct PedmasVar *y) {
   free(y);
 }
 
-void var_sub(struct PedmasVar *x, struct PedmasVar *y) {
+void var_sub(struct PemdasVar *x, struct PemdasVar *y) {
   ll_t lcd = get_lcd(x->den, y->den);
   var_denominate(x, lcd);
   var_denominate(y, lcd);
@@ -75,20 +75,20 @@ void var_sub(struct PedmasVar *x, struct PedmasVar *y) {
   free(y);
 }
 
-void var_mul(struct PedmasVar *x, struct PedmasVar *y) {
+void var_mul(struct PemdasVar *x, struct PemdasVar *y) {
   x->num *= y->num;
   x->den *= y->den;
   var_reduce(x);
   free(y);
 }
 
-void var_div(struct PedmasVar *x, struct PedmasVar *y) {
+void var_div(struct PemdasVar *x, struct PemdasVar *y) {
   x->num *= y->den;
   x->den *= y->num;
   var_reduce(x);
   free(y);
 }
 
-void var_print(struct PedmasVar *var) {
+void var_print(struct PemdasVar *var) {
   printf("%lld/%lld\n", var->num, var->den);
 }

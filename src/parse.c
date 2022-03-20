@@ -9,17 +9,17 @@
 #include "debug.h"
 
 
-struct PedmasVarToken *pedmas_parse_var(char *str, int *len) {
+struct PemdasVarToken *pemdas_parse_var(char *str, int *len) {
   if (isalpha(*str)) {
     char *start = str++;
     while (isalnum(*str) || isdigit(*str)) str++;
     *len = str - start;
-    return pedmas_new_var_token(strndup(start, *len), 1, 1);
+    return pemdas_new_var_token(strndup(start, *len), 1, 1);
   }
   return NULL;
 }
 
-struct PedmasVarToken *pedmas_parse_num(char *str, int *len) {
+struct PemdasVarToken *pemdas_parse_num(char *str, int *len) {
   char *start = str;
   if (!isdigit(*str)) {
     return NULL;
@@ -39,56 +39,56 @@ struct PedmasVarToken *pedmas_parse_num(char *str, int *len) {
     str++;
   }
   (*len) += str - start;
-  return pedmas_new_var_token(strndup(start, str - start), num, 1);
+  return pemdas_new_var_token(strndup(start, str - start), num, 1);
 }
 
-struct PedmasOpToken *pedmas_parse_op(char *str, int *len) {
+struct PemdasOpToken *pemdas_parse_op(char *str, int *len) {
   switch (*str) {
     case '+':
       *len = 1;
-      return pedmas_new_op_token(PEDMAS_ADD);
+      return pemdas_new_op_token(PEMDAS_ADD);
     case '-':
       *len = 1;
-      return pedmas_new_op_token(PEDMAS_SUB);
+      return pemdas_new_op_token(PEMDAS_SUB);
     case '/':
       *len = 1;
-      return pedmas_new_op_token(PEDMAS_DIV);
+      return pemdas_new_op_token(PEMDAS_DIV);
     case '*':
       *len = 1;
-      return pedmas_new_op_token(PEDMAS_MUL);
+      return pemdas_new_op_token(PEMDAS_MUL);
   }
   return NULL;
 }
 
-struct PedmasIneqToken *pedmas_parse_ineq(char *str, int *len) {
+struct PemdasIneqToken *pemdas_parse_ineq(char *str, int *len) {
   switch (*str) {
     case '=':
       *len = 1;
-      return pedmas_new_ineq_token(PEDMAS_EQ);
+      return pemdas_new_ineq_token(PEMDAS_EQ);
     case '>':
       if (*++str != '=') {
         *len = 1;
-        return pedmas_new_ineq_token(PEDMAS_GT);
+        return pemdas_new_ineq_token(PEMDAS_GT);
       }
       *len = 2;
-      return pedmas_new_ineq_token(PEDMAS_GTE);
+      return pemdas_new_ineq_token(PEMDAS_GTE);
     case '<':
       if (*++str != '=') {
         *len = 1;
-        return pedmas_new_ineq_token(PEDMAS_LT);
+        return pemdas_new_ineq_token(PEMDAS_LT);
       }
       *len = 2;
-      return pedmas_new_ineq_token(PEDMAS_LTE);
+      return pemdas_new_ineq_token(PEMDAS_LTE);
   }
   return NULL;
 }
 
 
-struct PedmasExprToken *pedmas_parse_paren(char *str, int *len) {
+struct PemdasExprToken *pemdas_parse_paren(char *str, int *len) {
   char *strp = str;
-  struct PedmasExprToken *token;
+  struct PemdasExprToken *token;
   if (*strp == '(') {
-    token = pedmas_parse_expr(++strp, len);
+    token = pemdas_parse_expr(++strp, len);
     strp+= *len;
     if (*strp != ')') {
       fprintf(stderr, "unexpected token at %s\n", str);
@@ -101,11 +101,11 @@ struct PedmasExprToken *pedmas_parse_paren(char *str, int *len) {
   return NULL;
 }
 
-struct PedmasExprToken *pedmas_parse_expr(char *str, int *len) {
+struct PemdasExprToken *pemdas_parse_expr(char *str, int *len) {
   char *strp = str;
-  struct PedmasToken *cur = pedmas_new_token();
-  struct PedmasToken *dummy = cur;
-  cur->type = PEDMAS_DUMMY;
+  struct PemdasToken *cur = pemdas_new_token();
+  struct PemdasToken *dummy = cur;
+  cur->type = PEMDAS_DUMMY;
   cur->next = NULL;
   int _len;
   while (*strp) {
@@ -113,10 +113,10 @@ struct PedmasExprToken *pedmas_parse_expr(char *str, int *len) {
     while (isblank(*strp)) {
       strp++;
     }
-    if (!((cur->next = (pedmas_token_t *)pedmas_parse_paren(strp, &_len)) ||
-          (cur->next = (pedmas_token_t *)pedmas_parse_num(strp, &_len)) ||
-          (cur->next = (pedmas_token_t *)pedmas_parse_op(strp, &_len)) ||
-          (cur->next = (pedmas_token_t *)pedmas_parse_var(strp, &_len)))) {
+    if (!((cur->next = (pemdas_token_t *)pemdas_parse_paren(strp, &_len)) ||
+          (cur->next = (pemdas_token_t *)pemdas_parse_num(strp, &_len)) ||
+          (cur->next = (pemdas_token_t *)pemdas_parse_op(strp, &_len)) ||
+          (cur->next = (pemdas_token_t *)pemdas_parse_var(strp, &_len)))) {
       break;
     }
     cur->next->prev = cur;
@@ -129,14 +129,14 @@ struct PedmasExprToken *pedmas_parse_expr(char *str, int *len) {
   if (dummy->next) {
     dummy->next->prev = NULL;
   }
-  return pedmas_new_expr_token(dummy->next);
+  return pemdas_new_expr_token(dummy->next);
 }
 
 
-struct PedmasToken *pedmas_parse(char *str) {
-  struct PedmasToken *cur = pedmas_new_token();
-  struct PedmasToken *dummy = cur;
-  cur->type = PEDMAS_DUMMY;
+struct PemdasToken *pemdas_parse(char *str) {
+  struct PemdasToken *cur = pemdas_new_token();
+  struct PemdasToken *dummy = cur;
+  cur->type = PEMDAS_DUMMY;
   cur->next = NULL;
   int len = 0;
   char *strp = str;
@@ -144,8 +144,8 @@ struct PedmasToken *pedmas_parse(char *str) {
     if (!*strp) {
       break;
     }
-    if (!((cur->next = (pedmas_token_t *)pedmas_parse_ineq(strp, &len)) ||
-        (cur->next = (pedmas_token_t *)pedmas_parse_expr(strp, &len)))) {
+    if (!((cur->next = (pemdas_token_t *)pemdas_parse_ineq(strp, &len)) ||
+        (cur->next = (pemdas_token_t *)pemdas_parse_expr(strp, &len)))) {
       strp += len;
       fprintf(stderr, "unexpected token at %s\n", strp);
       return NULL;
@@ -158,5 +158,5 @@ struct PedmasToken *pedmas_parse(char *str) {
   if (dummy->next) {
     dummy->next->prev = NULL;
   }
-  return (struct PedmasToken *)dummy->next;
+  return (struct PemdasToken *)dummy->next;
 }

@@ -5,39 +5,39 @@
 
 #include "var.h"
 
-struct PedmasToken *pedmas_new_token() {
-  return malloc(sizeof(struct PedmasToken));
+struct PemdasToken *pemdas_new_token() {
+  return malloc(sizeof(struct PemdasToken));
 }
 
-struct PedmasVarToken *pedmas_new_var_token(char *name, ll_t num, ll_t den) {
-  struct PedmasVarToken *token = (struct PedmasVarToken *)pedmas_new_token();
-  struct PedmasVar *var = malloc(sizeof(struct PedmasVar));
+struct PemdasVarToken *pemdas_new_var_token(char *name, ll_t num, ll_t den) {
+  struct PemdasVarToken *token = (struct PemdasVarToken *)pemdas_new_token();
+  struct PemdasVar *var = malloc(sizeof(struct PemdasVar));
   var->name = name;
   var->num = num;
   var->den = den;
-  token->type = PEDMAS_VAR;
+  token->type = PEMDAS_VAR;
   token->data = var;
   return token;
 }
 
-struct PedmasOpToken *pedmas_new_op_token(enum PedmasOp op) {
-  struct PedmasOpToken *token = (struct PedmasOpToken *)pedmas_new_token();
-  token->type = PEDMAS_OP;
+struct PemdasOpToken *pemdas_new_op_token(enum PemdasOp op) {
+  struct PemdasOpToken *token = (struct PemdasOpToken *)pemdas_new_token();
+  token->type = PEMDAS_OP;
   token->data = op;
   return token;
 }
 
-struct PedmasIneqToken *pedmas_new_ineq_token(enum PedmasIneq ineq_type) {
-  struct PedmasIneqToken *token = (struct PedmasIneqToken *)pedmas_new_token();
-  token->type = PEDMAS_INEQ;
+struct PemdasIneqToken *pemdas_new_ineq_token(enum PemdasIneq ineq_type) {
+  struct PemdasIneqToken *token = (struct PemdasIneqToken *)pemdas_new_token();
+  token->type = PEMDAS_INEQ;
   token->data = ineq_type;
   return token;
 }
 
 
-struct PedmasExprToken *pedmas_new_expr_token(struct PedmasToken *chain) {
-  struct PedmasExprToken *token = (struct PedmasExprToken *)pedmas_new_token();
-  token->type = PEDMAS_EXPR;
+struct PemdasExprToken *pemdas_new_expr_token(struct PemdasToken *chain) {
+  struct PemdasExprToken *token = (struct PemdasExprToken *)pemdas_new_token();
+  token->type = PEMDAS_EXPR;
   token->data = chain;
   return token;
 }

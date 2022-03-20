@@ -2,6 +2,8 @@ CC=gcc
 
 CFLAGS=-I.
 
+SHELL=/bin/bash
+
 .PHONY: debug
 debug:
 	$(CC) test.c -g -lm
@@ -11,6 +13,13 @@ debug:
 clean:
 	rm -fr build
 
+.PHONY: var.test
+var.test: clean
+	mkdir -p build
+	@echo $(shell ls src/{var,common}.{c,h})
+	$(CC) -o build/$@ $(shell ls src/{var,common}.{c,h}) src/$@.c -lm
+	./build/$@
+
 .PHONY: test
 %.test: clean
 	mkdir -p build
@@ -18,7 +27,7 @@ clean:
 	./build/$@
 
 .PHONY: test
-pedmas.debug: clean
+pemdas.debug: clean
 	mkdir -p build
-	$(CC) $(shell ls src/*.h | grep -v test) $(shell ls src/*.c | grep -v test) -o ./build/pedmas.debug ./src/pedmas.test.c -lm
-	gdb -ex run ./build/pedmas.debug
+	$(CC) $(shell ls src/*.h | grep -v test) $(shell ls src/*.c | grep -v test) -o ./build/pemdas.debug ./src/pemdas.test.c -lm
+	gdb -ex run ./build/pemdas.debug

@@ -7,15 +7,15 @@
 #include "math.h"
 #include "token.h"
 
-int pedmas_sprint_op(char *str, struct PedmasOpToken *op_token) {
+int pemdas_sprint_op(char *str, struct PemdasOpToken *op_token) {
   switch (op_token->data) {
-    case PEDMAS_ADD:
+    case PEMDAS_ADD:
       return sprintf(str, "+");
-    case PEDMAS_SUB:
+    case PEMDAS_SUB:
       return sprintf(str, "-");
-    case PEDMAS_MUL:
+    case PEMDAS_MUL:
       return sprintf(str, "*");
-    case PEDMAS_DIV:
+    case PEMDAS_DIV:
       return sprintf(str, "/");
     default:
       fprintf(stderr, "unrecognized token %s", str);
@@ -23,9 +23,9 @@ int pedmas_sprint_op(char *str, struct PedmasOpToken *op_token) {
   }
 }
 
-int pedmas_sprint_var(char *str, struct PedmasVarToken *var_token) {
+int pemdas_sprint_var(char *str, struct PemdasVarToken *var_token) {
   char *start = str;
-  struct PedmasVar *var = var_token->data;
+  struct PemdasVar *var = var_token->data;
   int len = 0;
   if (var->num != var->den || !strlen(var->name)) {
     long long num = var->num;
@@ -46,30 +46,30 @@ int pedmas_sprint_var(char *str, struct PedmasVarToken *var_token) {
   return str - start;
 }
 
-int pedmas_sprint_ineq(char *str, struct PedmasIneqToken *ineq_token) {
+int pemdas_sprint_ineq(char *str, struct PemdasIneqToken *ineq_token) {
   switch (ineq_token->data) {
-    case PEDMAS_EQ:
+    case PEMDAS_EQ:
       return sprintf(str, "=");
-    case PEDMAS_GT:
+    case PEMDAS_GT:
       return sprintf(str, ">");
-    case PEDMAS_GTE:
+    case PEMDAS_GTE:
       return sprintf(str, ">=");
-    case PEDMAS_LT:
+    case PEMDAS_LT:
       return sprintf(str, "<");
-    case PEDMAS_LTE:
+    case PEMDAS_LTE:
       return sprintf(str, "<=");
     default:
       fprintf(stderr, "unrecognized token %s", str);
       return 0;
   }
 }
-int pedmas_sprint_expr(char *str, struct PedmasToken *token) {
+int pemdas_sprint_expr(char *str, struct PemdasToken *token) {
   char *start = str;
   while (token) {
     switch (token->type) {
-      case PEDMAS_EXPR:
+      case PEMDAS_EXPR:
           *str++ = '(';
-        str += pedmas_sprint_expr(str, token->data);
+        str += pemdas_sprint_expr(str, token->data);
           if (*(str - 1) == ' ') {
             *(str - 1) = ')';
             *str++ = ' ';
@@ -77,18 +77,18 @@ int pedmas_sprint_expr(char *str, struct PedmasToken *token) {
             *str++ = ')';
           }
         break;
-      case PEDMAS_OP:
-        str += pedmas_sprint_op(str, (struct PedmasOpToken *)token);
+      case PEMDAS_OP:
+        str += pemdas_sprint_op(str, (struct PemdasOpToken *)token);
         break;
-      case PEDMAS_VAR:
-        str += pedmas_sprint_var(str, (struct PedmasVarToken *)token);
+      case PEMDAS_VAR:
+        str += pemdas_sprint_var(str, (struct PemdasVarToken *)token);
         break;
       default:
-        fprintf(stderr, "pedmas_sprint: Invalid token: %s\n",
-                get_pedmas_token_type_str(token->type));
+        fprintf(stderr, "pemdas_sprint: Invalid token: %s\n",
+                get_pemdas_token_type_str(token->type));
         exit(1);
     }
-    if (token->type != PEDMAS_EXPR) {
+    if (token->type != PEMDAS_EXPR) {
       *str++ = ' ';
     }
     token = token->next;
@@ -97,22 +97,22 @@ int pedmas_sprint_expr(char *str, struct PedmasToken *token) {
   return str - start;
 }
 
-int pedmas_sprint(char *str, struct PedmasToken *token) {
+int pemdas_sprint(char *str, struct PemdasToken *token) {
   char *start = str;
   while (token) {
     switch (token->type) {
-      case PEDMAS_EXPR:
-        str += pedmas_sprint_expr(str, token->data);
+      case PEMDAS_EXPR:
+        str += pemdas_sprint_expr(str, token->data);
         break;
-      case PEDMAS_INEQ:
-        str += pedmas_sprint_ineq(str, (struct PedmasIneqToken *)token);
+      case PEMDAS_INEQ:
+        str += pemdas_sprint_ineq(str, (struct PemdasIneqToken *)token);
         break;
       default:
-        fprintf(stderr, "pedmas_sprint: Invalid token\n");
+        fprintf(stderr, "pemdas_sprint: Invalid token\n");
         exit(1);
         break;
     }
-    if (token->type != PEDMAS_EXPR) {
+    if (token->type != PEMDAS_EXPR) {
       *str++ = ' ';
     }
     token = token->next;

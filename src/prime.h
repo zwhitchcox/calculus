@@ -1,5 +1,5 @@
- #ifndef __PEDMAS_PRIME__
- #define __PEDMAS_PRIME__
+ #ifndef __PEMDAS_PRIME__
+ #define __PEMDAS_PRIME__
  struct LLLinkedList {
    int num;
    struct LLLinkedList *next;
