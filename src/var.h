@@ -6,10 +6,12 @@
 #include "token.h"
 #include "common.h"
 
+
 typedef struct PedmasVar {
   char *name;
-  long long num;
-  long long den;
+  ll_t num;
+  ll_t den;
+  struct PemdasVar *pow;
 } pedmas_var_t;
 
 struct PedmasVar *var_new(ll_t num, ll_t den);

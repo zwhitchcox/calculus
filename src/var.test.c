@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
-#include "frac.h"
+#include "var.h"
 
 int main() {
   int x, y;
@@ -13,10 +13,10 @@ int main() {
   y = 200;
   printf("lcd(%d, %d): %d\n", x, y, get_lcd(x, y));
   assert(get_lcd(x,y) == 600);
-  struct Frac *frac1 = frac_new(x, y);
-  struct Frac *frac2 = frac_new(7,40);
-  frac_add(frac1, frac2);
+  struct PemdasVar *var1 = var_new(x, y);
+  struct PemdasVar *var2 = var_new(7,40);
+  var_add(var1, var2);
   // should be 1/4
-  frac_print(frac1);
-  assert(frac1->num == 1 && frac1->den == 4);
+  var_print(var1);
+  assert(var1->num == 1 && var1->den == 4);
 }
