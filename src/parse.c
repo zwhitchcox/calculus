@@ -14,7 +14,7 @@ struct PemdasIntToken *pemdas_parse_int(char *str, int *len) {
   if (!isdigit(*str)) {
     return NULL;
   }
-  ll_t num = 0;
+  long long num = 0;
   while (isdigit(*str)) {
     num *= 10;
     num += *str - '0';
@@ -72,7 +72,7 @@ struct PemdasVarToken *pemdas_parse_var(char *str, int *len) {
     while (isalnum(*str) || isdigit(*str)) str++;
     *len = str - start;
     return pemdas_new_var_token(strndup(start, *len),
-                                (pemdas_token_t *)pemdas_new_frac_token(1, 1));
+                                (PemdasToken *)pemdas_new_frac_token(1, 1));
   }
   return NULL;
 }
@@ -163,8 +163,8 @@ struct PemdasToken *parse_equation(char *str) {
 
     }
     skip_blank(strp)
-    if (!((cur->next = (pemdas_token_t *)pemdas_parse_ineq(strp, &len)) ||
-        (cur->next = (pemdas_token_t *)pemdas_parse_expr(strp, &len)))) {
+    if (!((cur->next = (PemdasToken *)pemdas_parse_ineq(strp, &len)) ||
+        (cur->next = (PemdasToken *)pemdas_parse_expr(strp, &len)))) {
       strp += len;
       fprintf(stderr, "unexpected token at %s\n", strp);
       return NULL;

@@ -2,13 +2,13 @@
 #include "debug.h"
 
 void debug_token_o(struct PemdasToken *token, char *str, int nl) {
-  printf("%s:%s", str, get_pemdas_token_type_str(token->type));
+  printf("%s:%s", str, get_PemdasTokenype_str(token->type));
   switch (token->type) {
     case PEMDAS_OP:
       printf(":%s", get_pemdas_op_str(((pemdas_op_token_t *)token)->data));
       break;
     case PEMDAS_INT:
-      printf(":%lld", (ll_t) token->data);
+      printf(":%lld", (long long) token->data);
       break;
     case PEMDAS_FRAC:
       printf(":%lld/%lld", ((pemdas_frac_token_t *)token)->data->num, ((pemdas_frac_token_t *)token)->data->den);
@@ -24,7 +24,7 @@ void debug_token_o(struct PemdasToken *token, char *str, int nl) {
       break;
     case PEMDAS_EXPR:;
       printf(":expression");
-      pemdas_token_t *cur_token = token->data;
+      PemdasToken *cur_token = token->data;
       while (cur_token) {
         debug_token_o(cur_token, "", 0);
         cur_token = cur_token->next;

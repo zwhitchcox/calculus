@@ -26,30 +26,29 @@ char **split(char *str, const char *del, int *len);
 } ##lc_type_t;
 /* END UTILS */
 
-typedef long long int ll_t;
-#include "frac.h"
+typedef long long int long long;
+#include "fraction.h"
 printable_enum(TokenType, token_type,
-  VAR,
+  EXPRESSION,
   TERM,
-  EXPR,
-  FRAC,
-  INT,
+  VARIABLE,
+  FRACTION,
 )
 
 DLL(Var, var)
 typedef struct Variable {
   char *name;
-} variable_t;
+};
 
 DLL(Term, term)
 typedef struct Term {
   struct LLVar *variables;
   struct Frac *coefficient;
-} term_t;
+};
 
 typedef struct Expression {
   struct LLTerm *terms;
-} expression_t;
+};
 
 printable_enum(ComparisonOperator, comparison_operator,
   GREATER_THAN,
@@ -59,17 +58,17 @@ printable_enum(ComparisonOperator, comparison_operator,
   EQUAL_TO
 )
 
-typedef struct Inequality {
+typedef struct Statement {
   enum ComparisonOperator op;
   struct Expression *left;
-  struct Inequality *right;
-} inequality_t;
+  struct Expression *right;
+};
 
 union Data {
+  struct Statement *statement;
   struct Expression *expression;
   struct Term *term;
   struct Variable *variable;
-  struct Inequality *inequality;
 };
 
 struct Token {

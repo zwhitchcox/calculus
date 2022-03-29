@@ -1,11 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "frac.h"
+#include "fraction.h"
 #include "prime.h"
 
 
-ll_t get_gcd(ll_t x, ll_t y) {
+long long get_gcd(long long x, long long y) {
   x = x > 0 ? x : -x;
   y = y > 0 ? y : -y;
   while (x != y) {
@@ -19,15 +19,15 @@ ll_t get_gcd(ll_t x, ll_t y) {
 }
 
 struct LLInt *primes;
-ll_t max_prime = 0;
+long long max_prime = 0;
 
-ll_t get_lcd(ll_t x, ll_t y) {
-  ll_t max = x > y ? x : y;
+long long get_lcd(long long x, long long y) {
+  long long max = x > y ? x : y;
   if (!(primes && max_prime < max)) {
     primes = get_primes(max);
   }
   struct LLInt *primep = primes;
-  ll_t cur_lcd = 1;
+  long long cur_lcd = 1;
   while (primep->num <= max && primep->num <= x && primep->num <= y) {
     while (x % primep->num == 0 && y % primep->num == 0) {
       x /= primep->num;
@@ -39,26 +39,26 @@ ll_t get_lcd(ll_t x, ll_t y) {
   return cur_lcd*x*y;
 }
 
-struct Frac *frac_new(ll_t num, ll_t den) {
+struct Frac *frac_new(long long num, long long den) {
   struct Frac *frac = malloc(sizeof(struct Frac));
   frac->num = num;
   frac->den = den;
 }
 
 void frac_reduce(struct Frac *frac) {
-  ll_t frac_gcd = get_gcd(frac->num, frac->den);
+  long long frac_gcd = get_gcd(frac->num, frac->den);
   frac->num /= frac_gcd;
   frac->den /= frac_gcd;
 }
 
-void frac_denominate(struct Frac *frac, ll_t den) {
-  ll_t x = den / frac->den;
+void frac_denominate(struct Frac *frac, long long den) {
+  long long x = den / frac->den;
   frac->num *= x;
   frac->den *= x;
 }
 
 void frac_add(struct Frac *x, struct Frac *y) {
-  ll_t lcd = get_lcd(x->den, y->den);
+  long long lcd = get_lcd(x->den, y->den);
   frac_denominate(x, lcd);
   frac_denominate(y, lcd);
   x->num += y->num;
@@ -67,7 +67,7 @@ void frac_add(struct Frac *x, struct Frac *y) {
 }
 
 void frac_sub(struct Frac *x, struct Frac *y) {
-  ll_t lcd = get_lcd(x->den, y->den);
+  long long lcd = get_lcd(x->den, y->den);
   frac_denominate(x, lcd);
   frac_denominate(y, lcd);
   x->num -= y->num;

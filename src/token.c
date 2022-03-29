@@ -43,7 +43,7 @@ struct PemdasIneqToken *pemdas_new_ineq_token(enum PemdasIneq ineq_type) {
   return token;
 }
 
-struct PemdasIntToken *pemdas_new_int_token(ll_t data) {
+struct PemdasIntToken *pemdas_new_int_token(long long data) {
   printf("new int data: %lld\n", data);
   struct PemdasIntToken *token = (struct PemdasIntToken *)pemdas_new_token();
   token->type = PEMDAS_INT;

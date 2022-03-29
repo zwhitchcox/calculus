@@ -60,7 +60,7 @@ int pemdas_sprint_var(char *str, struct PemdasVarToken *var_token) {
   struct PemdasFracToken *coef =
       (pemdas_frac_token_t *)var_token->data->coefficient;
   if (!(coef->data->num == 1 && coef->data->den == 1)) {
-    str += pemdas_sprint_num(str, (pemdas_token_t *)coef);
+    str += pemdas_sprint_num(str, (PemdasToken *)coef);
   }
   str += sprintf(str, "%s", var_token->data->name);
   return str - start;
@@ -111,7 +111,7 @@ int pemdas_sprint_expr(char *str, struct PemdasToken *token) {
         break;
       default:
         fprintf(stderr, "pemdas_sprint: Invalid token: %s\n",
-                get_pemdas_token_type_str(token->type));
+                get_PemdasTokenype_str(token->type));
         exit(1);
     }
     if (token->type != PEMDAS_EXPR) {

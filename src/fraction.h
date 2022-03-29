@@ -4,13 +4,13 @@
 #define __PEMDAS_FRAC__
 #include "common.h"
 struct Frac {
-  ll_t num;
-  ll_t den;
+  long long num;
+  long long den;
 };
-struct Frac *frac_new(ll_t num, ll_t den);
-ll_t get_gcd(ll_t x, ll_t y);
-ll_t get_lcd(ll_t x, ll_t y);
-void frac_denominate(struct Frac *frac, ll_t den);
+struct Frac *frac_new(long long num, long long den);
+long long get_gcd(long long x, long long y);
+long long get_lcd(long long x, long long y);
+void frac_denominate(struct Frac *frac, long long den);
 void frac_reduce(struct Frac *frac);
 void frac_print(struct Frac *frac);
 void frac_add(struct Frac *x, struct Frac *y);

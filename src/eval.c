@@ -5,7 +5,7 @@
 #include "debug.h"
 
 
-int (*eval_fns[])(pemdas_token_t*) = {pemdas_eval_p, pemdas_eval_e, pemdas_eval_d, pemdas_eval_m, pemdas_eval_a, pemdas_eval_s};
+int (*eval_fns[])(PemdasToken*) = {pemdas_eval_p, pemdas_eval_e, pemdas_eval_d, pemdas_eval_m, pemdas_eval_a, pemdas_eval_s};
 int eval_fns_len = sizeof(eval_fns) / sizeof(eval_fns[0]);
 
 int pemdas_eval(struct PemdasToken *token) {
@@ -32,7 +32,7 @@ int pemdas_eval_expr(struct PemdasToken *token) {
   int ops_performed = 0;
   do {
     int i = 0;
-    for (int (*op)(pemdas_token_t*) = eval_fns[i]; i < eval_fns_len; op = eval_fns[++i]) {
+    for (int (*op)(PemdasToken*) = eval_fns[i]; i < eval_fns_len; op = eval_fns[++i]) {
       int cur_ops_performed = 0;
       while (cur_ops_performed = op(token)) {
         ops_performed += cur_ops_performed;
@@ -52,7 +52,7 @@ int pemdas_eval_p(struct PemdasToken *token) {
     if (token->type == PEMDAS_EXPR) {
       ops_performed += pemdas_eval_expr(token->data);
       // flatten parentheses
-      pemdas_token_t *inner_token = ((pemdas_expr_token_t *) token)->data;
+      PemdasToken *inner_token = ((pemdas_expr_token_t *) token)->data;
       if (!inner_token->next) {
         token->type = inner_token->type;
         token->data = inner_token->data;
@@ -99,7 +99,7 @@ void simplify_frac(struct PemdasToken *token) {
 int pemdas_eval_frac_op(struct PemdasToken *token, enum PemdasOp op, void (*fn)(struct Frac *o1, struct Frac *o2)) {
   int ops_performed = 0;
   while (token && token->next) {
-    // printf("token type: %s\n", get_pemdas_token_type_str(token->type));
+    // printf("token type: %s\n", get_PemdasTokenype_str(token->type));
     if (!(token->type == PEMDAS_OP && (enum PemdasOp) token->data == op)) {
       token = token->next;
       continue;

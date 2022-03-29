@@ -4,7 +4,7 @@
 #define __PEMDAS_TOKEN__
 #include "common.h"
 
-printable_enum(PemdasTokenType, pemdas_token_type,
+printable_enum(PemdasTokenType, PemdasTokenype,
   PEMDAS_DUMMY, // used internally
   PEMDAS_OP,
   PEMDAS_INT,
@@ -19,7 +19,7 @@ typedef struct PemdasToken {
   struct PemdasToken *prev;
   struct PemdasToken *next;
   void *data;
-} pemdas_token_t;
+} PemdasToken;
 
 /* token - operations */
 printable_enum(PemdasOp, pemdas_op,
@@ -49,22 +49,22 @@ typedef struct PemdasIneqToken {
   struct PemdasToken *prev;
   struct PemdasToken *next;
   enum PemdasIneq data;
-} pemdas_ineq_token_t;
+};
 
 /* token - numbers */
 typedef struct PemdasIntToken {
   enum PemdasTokenType type;
   struct PemdasToken *prev;
   struct PemdasToken *next;
-  ll_t data;
-} pemdas_int_token_t;
+  long long data;
+};
 
 typedef struct PemdasFracToken {
   enum PemdasTokenType type;
   struct PemdasToken *prev;
   struct PemdasToken *next;
   struct Frac *data;
-} pemdas_frac_token_t;
+};
 
 /* token - var */
 typedef struct PemdasVarToken {
@@ -72,12 +72,12 @@ typedef struct PemdasVarToken {
   struct PemdasToken *prev;
   struct PemdasToken *next;
   struct PemdasVar *data;
-} pemdas_var_token_t;
+};
 
 typedef struct PemdasVar {
   char *name;
   struct PemdasToken *coefficient;
-} pemdas_var_t;
+};
 
 /* token - expr */
 typedef struct PemdasExprToken {
@@ -85,7 +85,7 @@ typedef struct PemdasExprToken {
   struct PemdasToken *prev;
   struct PemdasToken *next;
   struct PemdasToken *data;
-} pemdas_expr_token_t;
+};
 
 // token creators TODO: refactor
 struct PemdasToken *pemdas_new_token();

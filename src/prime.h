@@ -2,7 +2,7 @@
  #define __PEMDAS_PRIME__
  #include "common.h"
  struct LLInt {
-   ll_t num;
+   long long num;
    struct LLInt *next;
  };
 struct LLInt *sieve_of_eratosthenes(int max);
