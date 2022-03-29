@@ -2,18 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "frac.h"
+#include "fraction.h"
 
-#ifndef __PEMDAS_PARSE__
-#define __PEMDAS_PARSE__
-
-// parsers
-struct PemdasToken *pemdas_parse(char *str);
-struct PemdasExprToken *pemdas_parse_expr(char *str, int *len);
-struct PemdasExprToken *pemdas_parse_paren(char *str, int *len);
-struct PemdasOpToken *pemdas_parse_op(char *str, int *len);
-struct PemdasIntToken *pemdas_parse_int(char *str, int *len);
-struct PemdasVarToken *pemdas_parse_var(char *str, int *len);
-struct PemdasIneqToken *pemdas_parse_Ineq(char *str, int *len);
-
+#ifndef __PARSE__
+#define __PARSE__
+struct Token      *parse(char *str);
+struct Expression *parse_expression(char *str, int *len);
+struct Statement  *parse_statement(char *str, int *len);
+struct Term       *parse_term(char *str, int *len);
+struct Variable   *parse_variable(char *str, int *len);
 #endif

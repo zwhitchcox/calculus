@@ -1,7 +1,7 @@
 #include <ctype.h>
 #include <stdio.h>
 
-#include "frac.h"
+#include "fraction.h"
 #include "string.h"
 #include "print.h"
 #include "token.h"
@@ -110,7 +110,7 @@ struct PemdasExprToken *pemdas_parse_paren(char *str, int *len) {
   return NULL;
 }
 
-struct PemdasToke *parse_terms(char *str) {
+struct PemdasToken *parse_terms(char *str) {
 
 }
 

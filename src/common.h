@@ -1,5 +1,7 @@
 #ifndef __PEMDAS_COMMON__
 #define __PEMDAS_COMMON__
+#include "fraction.h"
+
 #define MAX_PEMDAS_ENUM_STR 100*1024
 
 /* UTILS */
@@ -19,23 +21,22 @@ char **split(char *str, const char *del, int *len);
     } \
     return strs[i]; \
   }
+
 #define DLL(type, lc_type) typedef struct LL##type { \
-  struct type *lc_type; \
+  struct type *##lc_type; \
   struct LL##type *next; \
   struct LL##type *prev; \
-} ##lc_type_t;
+} lc_type;
 /* END UTILS */
 
-typedef long long int long long;
-#include "fraction.h"
 printable_enum(TokenType, token_type,
   EXPRESSION,
   TERM,
   VARIABLE,
   FRACTION,
-)
+);
 
-DLL(Var, var)
+DLL(Variable, variable)
 typedef struct Variable {
   char *name;
 };
@@ -63,6 +64,8 @@ typedef struct Statement {
   struct Expression *left;
   struct Expression *right;
 };
+
+// TODO: Compound Statement
 
 union Data {
   struct Statement *statement;

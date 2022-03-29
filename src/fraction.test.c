@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
-#include "frac.h"
+#include "fraction.h"
 
 int main() {
   int x, y;

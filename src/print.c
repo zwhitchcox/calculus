@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 #include "debug.h"
-#include "frac.h"
+#include "fraction.h"
 #include "math.h"
 #include "token.h"
 

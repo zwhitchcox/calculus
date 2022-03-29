@@ -1,7 +1,7 @@
 #include "eval.h"
 #include "print.h"
 #include "token.h"
-#include "frac.h"
+#include "fraction.h"
 #include "debug.h"
 
 

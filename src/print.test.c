@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #include "pemdas.h"
-#include "frac.h"
+#include "fraction.h"
 #include "print.h"
 
 

@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "frac.h"
+#include "fraction.h"
 #include "common.h"
 
 struct PemdasToken *pemdas_new_token() {
