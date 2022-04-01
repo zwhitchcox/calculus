@@ -1,5 +1,6 @@
 #include <ctype.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 #include "fraction.h"
 #include "string.h"
@@ -10,7 +11,41 @@
 
 
 
-struct PemdasIntToken *pemdas_parse_int(char *str, int *len) {
+struct Token *new_token(enum TokenType type, void *data) {
+  struct Token *token = malloc(sizeof(struct Token));
+  token->type = type;
+  switch (type) {
+    case TOKEN_OPERATOR:
+      token->operator = data;
+      break;
+    case TOKEN_INTEGER:
+      token->integer = data;
+      break;
+    case TOKEN_FUNCTION:
+      token->function = data;
+      break;
+    case TOKEN_COMPARISON:
+
+    default:
+      fprintf(stderr, "Unrecognized token type: %d", type);
+      exit(1);
+  }
+  return token;
+}
+
+void *get_token(char *str) {
+  while (isblank(*str)) {
+    str++;
+  }
+  switch (*str) {
+    case '/':
+      struct Token *token = new_token(TOKEN_OPERATOR, *str);
+      token->operator = *str;
+      return token;
+  }
+}
+
+long long *parse_int(char *str, int *len) {
   if (!isdigit(*str)) {
     return NULL;
   }
@@ -21,62 +56,38 @@ struct PemdasIntToken *pemdas_parse_int(char *str, int *len) {
     str++;
     (*len)++;
   }
-  struct PemdasIntToken* token = pemdas_new_int_token(num);
-  return pemdas_new_int_token(num);
+  return num;
 }
 
-struct PemdasOpToken *pemdas_parse_op(char *str, int *len) {
-  switch (*str) {
-    case '+':
-      *len = 1;
-      return pemdas_new_op_token(PEMDAS_ADD);
-    case '-':
-      *len = 1;
-      return pemdas_new_op_token(PEMDAS_SUB);
-    case '/':
-      *len = 1;
-      return pemdas_new_op_token(PEMDAS_DIV);
-    case '*':
-      *len = 1;
-      return pemdas_new_op_token(PEMDAS_MUL);
-  }
-  return NULL;
-}
 
-struct PemdasIneqToken *pemdas_parse_ineq(char *str, int *len) {
-  switch (*str) {
-    case '=':
-      *len = 1;
-      return pemdas_new_ineq_token(PEMDAS_EQ);
-    case '>':
-      if (*++str != '=') {
-        *len = 1;
-        return pemdas_new_ineq_token(PEMDAS_GT);
-      }
-      *len = 2;
-      return pemdas_new_ineq_token(PEMDAS_GTE);
-    case '<':
-      if (*++str != '=') {
-        *len = 1;
-        return pemdas_new_ineq_token(PEMDAS_LT);
-      }
-      *len = 2;
-      return pemdas_new_ineq_token(PEMDAS_LTE);
-  }
-  return NULL;
-}
-
-struct PemdasVarToken *pemdas_parse_var(char *str, int *len) {
+union Node *parse_variable(char *str, int *len) {
   if (isalpha(*str)) {
-    char *start = str++;
-    while (isalnum(*str) || isdigit(*str)) str++;
-    *len = str - start;
-    return pemdas_new_var_token(strndup(start, *len),
-                                (PemdasToken *)pemdas_new_frac_token(1, 1));
+    union Node *node = malloc(sizeof(union Node));
+    node->node->type = VARIABLE;
+    struct Variable *var = malloc(sizeof(struct Variable));
+    *len += 1;
+    return var;
   }
   return NULL;
 }
-struct PemdasExprToken *pemdas_parse_e(char *str, int *len) {
+
+union Node *parse_term(char *str, int *len) {
+  while (isblank(*str)) {
+    str++;
+    *len++;
+  }
+  int cur_len = 0;
+  union Node *node = malloc(sizeof(union Node));
+  node->term->type = TERM;
+  node->term->coefficient = frac_new(1, 1);
+  while (true) {
+    if (parse_int(str, len)) {
+
+    }
+  }
+}
+
+struct Token *parse_expression(char *str, int *len) {
   char *strp = str;
   struct PemdasExprToken *token;
   if (*strp == '(') {

@@ -25,3 +25,10 @@ char **split(char *str, const char *del, int *len) {
   }
   return arr;
 }
+
+
+enum Comparison str_to_cmp(char *str) {
+  if (strcmp(*str, ">=") {
+    return GREATER
+  }
+}
